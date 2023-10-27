@@ -38,9 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		String loginPage = "/com/example/hamster_backend/api/login";
-		String registrationPage = "/com/example/hamster_backend/api/registration";
-		String errorPage = "/com/example/hamster_backend/api/error";
+		String loginPage = "/api/login";
+		String registrationPage = "/api/registration";
+		String errorPage = "/api/error";
 		
 		http.authorizeRequests()
 				.antMatchers(loginPage, registrationPage, errorPage).permitAll()

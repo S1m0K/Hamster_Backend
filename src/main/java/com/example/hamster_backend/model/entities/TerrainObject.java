@@ -40,17 +40,16 @@ public class TerrainObject {
     @Column(name = "HEIGHT")
     private int height;
 
-    @OneToMany(targetEntity = Field.class,mappedBy = "terrain", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hamster_id", referencedColumnName = "id")
+    private HamsterObject defaultHamster;
+
+    @OneToMany(targetEntity = Field.class, mappedBy = "terrainObject", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Field> customFields = new HashSet<>();
 
 //    @OneToMany(mappedBy = "terrain", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 //    private Set<HamsterObject> hamsters = new HashSet<>();
 
-    //@OneToOne(mappedBy = "TERRAIN", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "hamster_id", referencedColumnName = "id")
-    private HamsterObject defaultHamster;
 
     @Override
     public boolean equals(Object o) {
