@@ -6,7 +6,6 @@ import lombok.*;
 import javax.persistence.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,7 +30,7 @@ public class TerrainObject {
     @Column(name = "HASH_VALUE", unique = true)
     private int hashValue;
 
-    @Column(name = "TERRAIN_NAME")
+    @Column(name = "TERRAIN_NAME", unique = true)
     private String terrainName;
 
     @Column(name = "WIDTH")
@@ -46,10 +45,6 @@ public class TerrainObject {
 
     @OneToMany(targetEntity = Field.class, mappedBy = "terrainObject", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Field> customFields = new HashSet<>();
-
-//    @OneToMany(mappedBy = "terrain", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-//    private Set<HamsterObject> hamsters = new HashSet<>();
-
 
     @Override
     public boolean equals(Object o) {

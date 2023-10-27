@@ -19,48 +19,48 @@ import com.example.hamster_backend.service.impl.MyUserDetailsServiceImpl;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	private CustomPasswordEncoder encoder;
+    @Autowired
+    private CustomPasswordEncoder encoder;
 
-	@Autowired
-	private MyUserDetailsServiceImpl userDetailsService;
-	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
-	}
+    @Autowired
+    private MyUserDetailsServiceImpl userDetailsService;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
+    }
 
     @Bean
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
-	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		String loginPage = "/api/login";
-		String registrationPage = "/api/registration";
-		String errorPage = "/api/error";
-		
-		http.authorizeRequests()
-				.antMatchers(loginPage, registrationPage, errorPage).permitAll()
-				.anyRequest().authenticated().and()
-				.csrf().disable()
-				.requiresChannel().antMatchers("/**").requiresSecure().and()
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        String loginPage = "/api/login";
+        String registrationPage = "/api/registration";
+        String errorPage = "/api/error";
+
+        http.authorizeRequests()
+                .antMatchers(loginPage, registrationPage, errorPage).permitAll()
+                .anyRequest().authenticated().and()
+                .csrf().disable()
+                .requiresChannel().antMatchers("/**").requiresSecure().and()
 //				.formLogin().loginPage(loginPage).failureUrl("/user/login?error=true").defaultSuccessUrl("/user/home")
 //				.usernameParameter("username").passwordParameter("password").and()
 //				.logout().logoutSuccessUrl(loginPage).and()
-				.cors().and()
-				.exceptionHandling().authenticationEntryPoint((request, response, exception) -> {
-	                response.setStatus(401);
-	            })
-	            .accessDeniedHandler((request, response, exception) -> {
-	                response.setStatus(403);
-	            });
-	}
+                .cors().and()
+                .exceptionHandling().authenticationEntryPoint((request, response, exception) -> {
+                    response.setStatus(401);
+                })
+                .accessDeniedHandler((request, response, exception) -> {
+                    response.setStatus(403);
+                });
+    }
 
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/webjars/**");
-	}
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/webjars/**");
+    }
 }

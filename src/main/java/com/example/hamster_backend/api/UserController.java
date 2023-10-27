@@ -55,7 +55,6 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(userFound, HttpStatus.OK);
-		//TODO send fileNames
 	}
 	
 	/*

@@ -33,16 +33,14 @@ public class Program implements Comparable {
     @Column(name = "HASH_VALUE", unique = true)
     private int hashValue;
 
-    @Column(name = "PROGRAM_NAME")
+    @Column(name = "PROGRAM_NAME", unique = true)
     private String programName;
 
     @Column(name = "SOURCE_CODE")
     private String sourceCode;
 
-    @JsonIgnore
-    @Column(name = "COMPILATION_ORDER")
+    @Transient
     private int compilationOrder;
-    //TODO remove compiler order?
 
     @Override
     public boolean equals(Object o) {

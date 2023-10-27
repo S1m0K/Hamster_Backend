@@ -97,7 +97,7 @@ public class Workbench {
         compiler.setActiveFile(file);
         file.setType(HamsterFile.OBJECT);
         ensureCompiled(file);
-        //TODO: make sure if it is needed to compile as OOP file
+        //TODO: make sure if it is needed to compile as OOP file !
     }
 
     @Getter

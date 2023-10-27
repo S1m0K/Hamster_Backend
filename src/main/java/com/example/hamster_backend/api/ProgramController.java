@@ -14,11 +14,19 @@ public class ProgramController {
 
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping(path = "saveOrUpdate")
-    public void saveProgram(@RequestBody Program program){programService.saveOrUpdate(program);}
+    public void saveProgram(@RequestBody Program program) {
+        programService.saveOrUpdate(program);
+    }
 
     @PreAuthorize("hasAuthority('USER')")
     @DeleteMapping(path = "delete/{program_id}")
-    public void deleteProgram(@PathVariable("program_id") long programId){programService.delete(programId);}
+    public void deleteProgram(@PathVariable("program_id") long programId) {
+        programService.delete(programId);
+    }
 
 
+    //TODO:  getAllProgramNames() --> and Ids
+    //TODO:  getProgram(<TerrainId>)
+    //TODO:  deleteProgram(<TerrainId>)
+    //TODO:  save/updateProgram(<TerrainObject>) --> if Id null => createProgram
 }
