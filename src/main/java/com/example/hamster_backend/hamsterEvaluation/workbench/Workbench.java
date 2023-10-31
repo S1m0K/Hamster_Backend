@@ -178,7 +178,7 @@ public class Workbench {
         }
     }
 
-    public Terrain createHamsterTerrain(String terrainName, Set<Field> customFields, int height, int width, HamsterObject hamster) {
+    public Terrain createHamsterTerrain(Set<Field> customFields, int height, int width, HamsterObject hamster) {
         Terrain terrain = new Terrain(width, height);
         customFields.forEach(field -> {
             terrain.setWall(field.getXCord(), field.getYCord(), field.isWall());
@@ -187,7 +187,7 @@ public class Workbench {
         terrain.getDefaultHamster().setDir(ViewDirection.viewDirectionIntegerMap.get(hamster.getViewDirection()));
         terrain.getDefaultHamster().setMouth(hamster.getCntCornInMouth());
         terrain.getDefaultHamster().setXY(hamster.getXCord(),  hamster.getYCord());
-        //TODO MAP !
+        //TODO MAP??? dont know what to do here!
         return terrain;
     }
 

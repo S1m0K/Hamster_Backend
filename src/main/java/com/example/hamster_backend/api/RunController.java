@@ -4,13 +4,10 @@ import com.example.hamster_backend.hamsterEvaluation.simulation.model.Terrain;
 import com.example.hamster_backend.hamsterEvaluation.workbench.Workbench;
 import com.example.hamster_backend.model.WriteFile;
 import com.example.hamster_backend.model.entities.Program;
-import com.example.hamster_backend.model.entities.RunConfig;
 import com.example.hamster_backend.model.entities.TerrainObject;
-import com.example.hamster_backend.model.entities.User;
+import com.example.hamster_backend.model.session.AuthorizationUtils;
 import com.example.hamster_backend.service.ProgramService;
 import com.example.hamster_backend.service.TerrainObjectService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.example.hamster_backend.model.entities.Program.resolveCompileOrder;
 
@@ -34,34 +30,27 @@ public class RunController {
     @Autowired
     ProgramService programService;
 
-    @Autowired
-    private ObjectMapper mapper;
-
-    private Workbench wb = Workbench.getWorkbench();
-
+    private final Workbench wb = Workbench.getWorkbench();
 
     @PreAuthorize("hasAuthority('USER')")
-    @PostMapping("/runProgram")
+    @PostMapping("/runProgram/{program_id}/{terrain_id}")
     @ResponseBody
-    public ResponseEntity<?> runProgram(@RequestBody JsonNode node) {
-        RunConfig runConfig = mapper.convertValue(node.get("runConfig"), RunConfig.class);
-        TerrainObject terrainObject = runConfig.getTerrainObject();
-        User u = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        terrainObject.setUserID(u.getId());
+    public ResponseEntity<?> runProgram(@PathVariable("program_id") long programId, @PathVariable("terrain_id") long terrainId) {
+        TerrainObject terrainObject = terrainObjectService.getTerrainObject(terrainId);
 
-        terrainObjectService.compareAndUpdateDatabase(terrainObject);
-
-        String terrainPath = String.format("src/main/resources/hamster/%s/%s.ter", SecurityContextHolder.getContext().getAuthentication().getName(), terrainObject.getTerrainName());
-        Terrain terrain = wb.createHamsterTerrain(terrainObject.getTerrainName(), terrainObject.getCustomFields(), terrainObject.getHeight(), terrainObject.getWidth(), terrainObject.getDefaultHamster());
+        String terrainPath = String.format("src/main/resources/hamster/%s/%s.ter", AuthorizationUtils.getUserName(), terrainObject.getTerrainName());
+        Terrain terrain = wb.createHamsterTerrain(terrainObject.getCustomFields(), terrainObject.getHeight(), terrainObject.getWidth(), terrainObject.getDefaultHamster());
         wb.createTerrainFile(terrain, terrainPath);
 
-        ArrayList<Program> programs = runConfig.getPrograms().stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
-        programs = resolveCompileOrder(programs);
+        Program program = programService.getProgram(programId);
+        ArrayList<Program> programsToCompile = new ArrayList<>(programService.getAllNeededProgramToRun(program.getSourceCode()));
+        if (!programsToCompile.isEmpty()) {
+            programsToCompile = resolveCompileOrder(programsToCompile);
+        }
+        programsToCompile.add(program);//last to compile is main-containing program
 
-        for (Program program : programs) {
-            programService.compareAndUpdateDatabase(program);
-
+        for (Program p : programsToCompile) {
             String sourceCodeFilePath = String.format("src/main/resources/hamster/%s/%s.ham", SecurityContextHolder.getContext().getAuthentication().getName(), program.getProgramName());
             WriteFile.createNewFile(sourceCodeFilePath);
             WriteFile.writeTextToFile(new File(sourceCodeFilePath), program.getSourceCode());
@@ -69,11 +58,8 @@ public class RunController {
         }
 
         wb.getJsonObject().clear();
-        String mainMethodContainingPath = String.format("src/main/resources/hamster/%s/%s.ham", SecurityContextHolder.getContext().getAuthentication().getName(),
-                programs.get(programs.size() - 1).getProgramName());
+        String mainMethodContainingPath = String.format("src/main/resources/hamster/%s/%s.ham", AuthorizationUtils.getUserName(),
+                program.getProgramName());
         return new ResponseEntity<>(wb.startProgram(mainMethodContainingPath, terrainPath), HttpStatus.OK);
     }
-
-
-    //TODO: rewrite to runProgram(<ProgramId>,<TerrainName>) --> look into file and search for classNames --> load them and compile
 }
