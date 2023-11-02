@@ -13,8 +13,8 @@ import java.util.Set;
 public interface ProgramRepository extends JpaRepository<Program, Long> {
     Set<Program> findAllByUserId(long id);
 
-    @Query("select p.programId, p.programName, p.programPath from Program p where p.userId = :userId")
-    Set<Program> findAllProgramBasicDataByUserID(@Param("userid") long userId);
+    @Query("select new com.example.hamster_backend.model.entities.Program(p.programId, p.programName, p.programPath) from Program p where p.userId = :user_id")
+    Set<Program> findAllProgramBasicDataByUserID(@Param("user_id") long userId);
 
     Program findProgramByProgramId(long id);
 

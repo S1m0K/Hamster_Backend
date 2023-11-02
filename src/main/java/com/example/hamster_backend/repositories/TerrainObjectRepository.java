@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.thymeleaf.spring5.expression.Fields;
 
 import java.util.Set;
 
@@ -16,8 +15,8 @@ import java.util.Set;
 public interface TerrainObjectRepository extends JpaRepository<TerrainObject, Long> {
     Set<TerrainObject> findAllByUserId(long id);
 
-    @Query("select t.terrainId, t.terrainName, t.terrainPath from TerrainObject t where t.userId = :userId")
-    Set<TerrainObject> findAllTerrainBasicDataByUserID(@Param("userid") long userId);
+    @Query("select new com.example.hamster_backend.model.entities.TerrainObject(t.terrainId, t.terrainName, t.terrainPath) from TerrainObject t where t.userId = :user_id")
+    Set<TerrainObject> findAllTerrainBasicDataByUserID(@Param("user_id") long userId);
 
     TerrainObject findTerrainObjectByTerrainId(long id);
 
