@@ -1,14 +1,14 @@
 package com.example.hamster_backend.api;
 
-import com.example.hamster_backend.model.entities.Program;
 import com.example.hamster_backend.model.entities.TerrainObject;
 import com.example.hamster_backend.model.entities.User;
+import com.example.hamster_backend.service.TerrainObjectService;
+import com.example.hamster_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import com.example.hamster_backend.service.TerrainObjectService;
 
+import java.security.Principal;
 import java.util.Set;
 
 @RestController
@@ -16,6 +16,9 @@ import java.util.Set;
 public class TerrainObjectController {
     @Autowired
     TerrainObjectService terrainObjectService;
+
+    @Autowired
+    UserService userService;
 
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping(path = "save")
@@ -51,9 +54,9 @@ public class TerrainObjectController {
 
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping(path = "getBasicData")
-    public Set<TerrainObject> getTerrainObjectNames() {
-        User u = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        return terrainObjectService.getTerrainObjectBasicData(u.getId());
+    public Set<TerrainObject> getTerrainBasicData(Principal principal) {
+        User user = userService.findUserByUsername(principal.getName());
+        return terrainObjectService.getTerrainObjectBasicData(user.getId());
     }
 
 

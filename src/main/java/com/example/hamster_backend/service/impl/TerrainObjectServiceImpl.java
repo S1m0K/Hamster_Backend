@@ -1,10 +1,11 @@
 package com.example.hamster_backend.service.impl;
 
 import com.example.hamster_backend.model.entities.TerrainObject;
-import com.example.hamster_backend.model.session.AuthorizationUtils;
 import com.example.hamster_backend.repositories.TerrainObjectRepository;
 import com.example.hamster_backend.service.TerrainObjectService;
+import com.example.hamster_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,6 +15,9 @@ import java.util.Set;
 public class TerrainObjectServiceImpl implements TerrainObjectService {
     @Autowired
     TerrainObjectRepository terrainObjectRepository;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public void compareAndUpdateDatabase(TerrainObject terrainObject) {
@@ -42,7 +46,8 @@ public class TerrainObjectServiceImpl implements TerrainObjectService {
         Optional<TerrainObject> o = terrainObjectRepository.findById(id);
         if (o.isPresent()) {
             TerrainObject t = o.get();
-            if (AuthorizationUtils.getAuthUserId().equals(t.getUserId())) {
+            long userId = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
+            if (userId == t.getUserId()) {
                 terrainObjectRepository.delete(t);
             }
         }
@@ -58,7 +63,8 @@ public class TerrainObjectServiceImpl implements TerrainObjectService {
         Optional<TerrainObject> o = terrainObjectRepository.findById(terrainObject.getTerrainId());
         if (o.isPresent()) {
             TerrainObject t = o.get();
-            if (AuthorizationUtils.getAuthUserId().equals(t.getUserId())) {
+            long userId = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
+            if (userId == t.getUserId()) {
                 terrainObjectRepository.update(t.getTerrainId(),t.getCustomFields(), t.getDefaultHamster(), t.getHeight(),t.getWidth());
             }
         } else {

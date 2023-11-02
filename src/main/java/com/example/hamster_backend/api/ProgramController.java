@@ -1,12 +1,14 @@
 package com.example.hamster_backend.api;
 
 import com.example.hamster_backend.model.entities.Program;
-import com.example.hamster_backend.model.session.AuthorizationUtils;
+import com.example.hamster_backend.model.entities.User;
 import com.example.hamster_backend.service.ProgramService;
+import com.example.hamster_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Set;
 
 @RestController
@@ -14,6 +16,9 @@ import java.util.Set;
 public class ProgramController {
     @Autowired
     ProgramService programService;
+
+    @Autowired
+    UserService userService;
 
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping(path = "save")
@@ -47,7 +52,8 @@ public class ProgramController {
 
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping(path = "getBasicData")
-    public Set<Program> getTerrainObjectNames() {
-        return programService.getProgramBasicData(AuthorizationUtils.getAuthUserId());
+    public Set<Program> getProgramBasicData(Principal principal) {
+        User user = userService.findUserByUsername(principal.getName());
+        return programService.getProgramBasicData(user.getId());
     }
 }

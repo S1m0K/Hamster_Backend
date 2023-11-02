@@ -1,10 +1,11 @@
 package com.example.hamster_backend.service.impl;
 
 import com.example.hamster_backend.model.entities.Program;
-import com.example.hamster_backend.model.session.AuthorizationUtils;
 import com.example.hamster_backend.repositories.ProgramRepository;
 import com.example.hamster_backend.service.ProgramService;
+import com.example.hamster_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,6 +18,9 @@ public class ProgramServiceImpl implements ProgramService {
 
     @Autowired
     ProgramRepository programRepository;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public void compareAndUpdateDatabase(Program program) {
@@ -41,7 +45,8 @@ public class ProgramServiceImpl implements ProgramService {
         Optional<Program> o = programRepository.findById(programId);
         if (o.isPresent()) {
             Program p = o.get();
-            if (AuthorizationUtils.getAuthUserId().equals(p.getUserId())) {
+            long userId = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
+            if (userId == p.getUserId()) {
                 programRepository.delete(p);
             }
         }
@@ -91,7 +96,8 @@ public class ProgramServiceImpl implements ProgramService {
         Optional<Program> o = programRepository.findById(program.getProgramId());
         if (o.isPresent()) {
             Program p = o.get();
-            if (AuthorizationUtils.getAuthUserId().equals(p.getUserId())) {
+            long userId = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
+            if (userId == p.getUserId()) {
                 programRepository.update(p.getProgramId(), p.getSourceCode());
             }
         } else {

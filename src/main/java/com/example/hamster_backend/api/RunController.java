@@ -5,9 +5,10 @@ import com.example.hamster_backend.hamsterEvaluation.workbench.Workbench;
 import com.example.hamster_backend.model.WriteFile;
 import com.example.hamster_backend.model.entities.Program;
 import com.example.hamster_backend.model.entities.TerrainObject;
-import com.example.hamster_backend.model.session.AuthorizationUtils;
+import com.example.hamster_backend.model.entities.User;
 import com.example.hamster_backend.service.ProgramService;
 import com.example.hamster_backend.service.TerrainObjectService;
+import com.example.hamster_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static com.example.hamster_backend.model.entities.Program.resolveCompileOrder;
 
@@ -30,6 +30,9 @@ public class RunController {
     @Autowired
     ProgramService programService;
 
+    @Autowired
+    UserService userService;
+
     private final Workbench wb = Workbench.getWorkbench();
 
     @PreAuthorize("hasAuthority('USER')")
@@ -37,8 +40,8 @@ public class RunController {
     @ResponseBody
     public ResponseEntity<?> runProgram(@PathVariable("program_id") long programId, @PathVariable("terrain_id") long terrainId) {
         TerrainObject terrainObject = terrainObjectService.getTerrainObject(terrainId);
-
-        String terrainPath = String.format("src/main/resources/hamster/%s/%s.ter", AuthorizationUtils.getUserName(), terrainObject.getTerrainName());
+        User user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        String terrainPath = String.format("src/main/resources/hamster/%s/%s.ter", user.getUsername(), terrainObject.getTerrainName());
         Terrain terrain = wb.createHamsterTerrain(terrainObject.getCustomFields(), terrainObject.getHeight(), terrainObject.getWidth(), terrainObject.getDefaultHamster());
         wb.createTerrainFile(terrain, terrainPath);
 
@@ -58,7 +61,7 @@ public class RunController {
         }
 
         wb.getJsonObject().clear();
-        String mainMethodContainingPath = String.format("src/main/resources/hamster/%s/%s.ham", AuthorizationUtils.getUserName(),
+        String mainMethodContainingPath = String.format("src/main/resources/hamster/%s/%s.ham", user.getUsername(),
                 program.getProgramName());
         return new ResponseEntity<>(wb.startProgram(mainMethodContainingPath, terrainPath), HttpStatus.OK);
     }
