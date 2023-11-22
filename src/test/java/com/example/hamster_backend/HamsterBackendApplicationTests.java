@@ -9,5 +9,4 @@ class HamsterBackendApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
