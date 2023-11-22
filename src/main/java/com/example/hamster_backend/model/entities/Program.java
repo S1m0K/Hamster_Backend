@@ -1,11 +1,10 @@
 package com.example.hamster_backend.model.entities;
 
+import com.example.hamster_backend.model.QuickSort;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import com.example.hamster_backend.model.QuickSort;
 
 import javax.persistence.*;
-
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,10 +23,10 @@ public class Program implements Comparable {
     @Column(name = "ID")
     @SequenceGenerator(name = "program_seq", sequenceName = "PROGRAM_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "program_seq")
-    private Integer programId;
+    private long programId;
 
     @Column(name = "USER_ID")
-    private long userID;
+    private long userId;
 
     @JsonIgnore
     @Column(name = "HASH_VALUE", unique = true)
@@ -41,6 +40,9 @@ public class Program implements Comparable {
 
     @Transient
     private int compilationOrder;
+
+    @Column(name = "PROGRAM_PATH")
+    private String programPath;
 
     @Override
     public boolean equals(Object o) {
@@ -94,7 +96,7 @@ public class Program implements Comparable {
         return classNames;
     }
 
-    private static ArrayList<String> extractImportedClasses(String input) {
+    public static ArrayList<String> extractImportedClasses(String input) {
         String pattern = "\\s*import\\s+([a-zA-Z0-9_.]*)\\s*;";
         ArrayList<String> importedClasses = new ArrayList<>();
         Pattern p = Pattern.compile(pattern);
@@ -127,11 +129,12 @@ public class Program implements Comparable {
         ArrayList<Comparable> sortedPrograms = (ArrayList<Comparable>) programs.clone();
         sortedPrograms = QuickSort.sort(sortedPrograms);
         programs = (ArrayList<Program>) sortedPrograms.clone();
-
-        //move program to last position
-        Program main = Program.getMainFile(programs);
-        programs.remove(main);
-        programs.add(main);
         return programs;
+    }
+
+    public Program(long programId, String programName, String programPath) {
+        this.programId = programId;
+        this.programName = programName;
+        this.programPath = programPath;
     }
 }

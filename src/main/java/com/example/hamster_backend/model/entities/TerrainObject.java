@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -24,7 +23,7 @@ public class TerrainObject {
     private long terrainId;
 
     @Column(name = "USER_ID")
-    private long userID;
+    private long userId;
 
     @JsonIgnore
     @Column(name = "HASH_VALUE", unique = true)
@@ -46,17 +45,26 @@ public class TerrainObject {
     @OneToMany(targetEntity = Field.class, mappedBy = "terrainObject", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Field> customFields = new HashSet<>();
 
+    @Column(name = "TERRAIN_PATH")
+    private String terrainPath;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TerrainObject that = (TerrainObject) o;
-        return Objects.equals(userID, that.userID) && Objects.equals(terrainName, that.terrainName) && Objects.equals(width, that.width)
+        return Objects.equals(userId, that.userId) && Objects.equals(terrainName, that.terrainName) && Objects.equals(width, that.width)
                 && Objects.equals(height, that.height) && Objects.equals(customFields, that.customFields);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userID, terrainName, width, height, /*hamsters*/defaultHamster, customFields);
+        return Objects.hash(userId, terrainName, width, height, /*hamsters*/defaultHamster, customFields);
+    }
+
+    public TerrainObject(long terrainId, String terrainName, String terrainPath) {
+        this.terrainId = terrainId;
+        this.terrainName = terrainName;
+        this.terrainPath = terrainPath;
     }
 }
