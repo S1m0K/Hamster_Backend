@@ -7,15 +7,17 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public interface ProgramService {
-    void compareAndUpdateDatabase(Program program);
+//    void compareAndUpdateDatabase(Program program);
 
-    void save(Program program);
+    Program save(Program program);
 
-    void updatePath(Program program);
+    boolean update(Program program);
 
-    void updateName(Program program);
+    boolean updatePath(Program program);
 
-    void delete(long programId);
+    boolean updateName(Program program);
+
+    boolean delete(long programId);
 
     Set<Program> getProgramBasicData(long id);
 

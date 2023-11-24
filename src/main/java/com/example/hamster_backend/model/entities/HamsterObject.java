@@ -18,7 +18,7 @@ public class HamsterObject {
     @Column(name = "ID")
     @SequenceGenerator(name = "hamster_seq", sequenceName = "HAMSTER_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hamster_seq")
-    private Integer hamster_id;
+    private long hamster_id;
 
 //    @JsonIgnore
 //    @ManyToOne

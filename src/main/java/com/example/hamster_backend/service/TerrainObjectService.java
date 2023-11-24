@@ -10,13 +10,15 @@ public interface TerrainObjectService {
 
     Set<TerrainObject> getTerrainObjectBasicData(long id);
 
-    void delete(long id);
+    boolean delete(long id);
 
     TerrainObject getTerrainObject(long id);
 
-    void save(TerrainObject terrainObject);
+    TerrainObject save(TerrainObject terrainObject);
 
-    void updatePath(TerrainObject terrainObject);
+    boolean updatePath(TerrainObject terrainObject);
 
-    void updateName(TerrainObject terrainObject);
+    boolean updateName(TerrainObject terrainObject);
+
+    boolean update(TerrainObject terrainObject);
 }

@@ -1,13 +1,17 @@
 package com.example.hamster_backend.api;
 
 import com.example.hamster_backend.model.entities.Program;
+import com.example.hamster_backend.model.entities.TerrainObject;
 import com.example.hamster_backend.model.entities.User;
 import com.example.hamster_backend.service.ProgramService;
 import com.example.hamster_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Set;
 
@@ -22,38 +26,53 @@ public class ProgramController {
 
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping(path = "save")
-    public void saveProgram(@RequestBody Program program) {
-        programService.save(program);
+    public ResponseEntity<?> saveProgram(@RequestBody Program program, Principal principal) {
+        User user = userService.findUserByUsername(principal.getName());
+        program.setUserId(user.getId());
+        Program savedProgram = programService.save(program);
+        return ResponseEntity.ok(savedProgram);
     }
 
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping(path = "updatePath")
-    public void updatePath(@RequestBody Program program) {
-        programService.updatePath(program);
+    public ResponseEntity<?> updatePath(@RequestBody Program program) {
+        boolean updateResult = programService.updatePath(program);
+        return updateResult ? ResponseEntity.ok("Path update successful") : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Path update failed");
     }
 
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping(path = "updateName")
-    public void updateName(@RequestBody Program program) {
-        programService.updateName(program);
+    public ResponseEntity<?> updateName(@RequestBody Program program) {
+        boolean updateResult = programService.updateName(program);
+        return updateResult ? ResponseEntity.ok("Name update successful") : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Name update failed");
     }
 
     @PreAuthorize("hasAuthority('USER')")
     @DeleteMapping(path = "delete/{program_id}")
-    public void deleteProgram(@PathVariable("program_id") long programId) {
-        programService.delete(programId);
+    public ResponseEntity<?> deleteProgram(@PathVariable("program_id") long programId) {
+        boolean updateResult = programService.delete(programId);
+        return updateResult ? ResponseEntity.ok("Delete successful") : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Delete failed");
     }
 
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping(path = "get/{program_id}")
-    public Program getProgram(@PathVariable("program_id") long programId) {
-        return programService.getProgram(programId);
+    public ResponseEntity<Program> getProgram(@PathVariable("program_id") long programId) {
+        Program program = programService.getProgram(programId);
+        return ResponseEntity.ok(program);
     }
 
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping(path = "getBasicData")
-    public Set<Program> getProgramBasicData(Principal principal) {
+    public ResponseEntity<Set<Program>> getProgramBasicData(Principal principal) {
         User user = userService.findUserByUsername(principal.getName());
-        return programService.getProgramBasicData(user.getId());
+        Set<Program> basicData = programService.getProgramBasicData(user.getId());
+        return ResponseEntity.ok(basicData);
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping(path = "update")
+    public ResponseEntity<?> updateTerrainObject(@RequestBody @Valid Program program) {
+        boolean updateResult = programService.update(program);
+        return updateResult ? ResponseEntity.ok("Update successful") : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed");
     }
 }

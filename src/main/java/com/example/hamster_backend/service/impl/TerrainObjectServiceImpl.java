@@ -42,15 +42,18 @@ public class TerrainObjectServiceImpl implements TerrainObjectService {
     }
 
     @Override
-    public void delete(long id) {
+    public boolean delete(long id) {
         Optional<TerrainObject> o = terrainObjectRepository.findById(id);
         if (o.isPresent()) {
             TerrainObject t = o.get();
             long userId = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
             if (userId == t.getUserId()) {
                 terrainObjectRepository.delete(t);
+                Optional<TerrainObject> o2 = terrainObjectRepository.findById(id);
+                return o2.isEmpty();
             }
         }
+        return false;
     }
 
     @Override
@@ -59,26 +62,30 @@ public class TerrainObjectServiceImpl implements TerrainObjectService {
     }
 
     @Override
-    public void save(TerrainObject terrainObject) {
+    public TerrainObject save(TerrainObject terrainObject) {
+        return terrainObjectRepository.save(terrainObject);
+    }
+
+    @Override
+    public boolean updatePath(TerrainObject terrainObject) {
+        return terrainObjectRepository.updatePath(terrainObject.getTerrainId(), terrainObject.getTerrainPath());
+    }
+
+    @Override
+    public boolean updateName(TerrainObject terrainObject) {
+        return terrainObjectRepository.updateName(terrainObject.getTerrainId(), terrainObject.getTerrainName());
+    }
+
+    @Override
+    public boolean update(TerrainObject terrainObject) {
         Optional<TerrainObject> o = terrainObjectRepository.findById(terrainObject.getTerrainId());
         if (o.isPresent()) {
             TerrainObject t = o.get();
             long userId = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
             if (userId == t.getUserId()) {
-                terrainObjectRepository.update(t.getTerrainId(),t.getCustomFields(), t.getDefaultHamster(), t.getHeight(),t.getWidth());
+                return terrainObjectRepository.update(t.getTerrainId(), t.getCustomFields(), t.getDefaultHamster(), t.getHeight(), t.getWidth());
             }
-        } else {
-            terrainObjectRepository.save(terrainObject);
         }
-    }
-
-    @Override
-    public void updatePath(TerrainObject terrainObject) {
-        terrainObjectRepository.updatePath(terrainObject.getTerrainId(),terrainObject.getTerrainPath());
-    }
-
-    @Override
-    public void updateName(TerrainObject terrainObject) {
-        terrainObjectRepository.updateName(terrainObject.getTerrainId(), terrainObject.getTerrainName());
+        return false;
     }
 }

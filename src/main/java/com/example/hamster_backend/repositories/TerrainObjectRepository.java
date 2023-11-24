@@ -22,7 +22,7 @@ public interface TerrainObjectRepository extends JpaRepository<TerrainObject, Lo
 
     @Modifying
     @Query("update TerrainObject t set t.customFields = :custom_fields , t.defaultHamster = :default_hamster, t.height=:height, t.width = :width where t.terrainId = :terrain_id ")
-    void update(@Param("terrain_id") long terrainId,
+    boolean update(@Param("terrain_id") long terrainId,
                 @Param("custom_fields") Set<Field> customFields,
                 @Param("default_hamster") HamsterObject defaultHamster,
                 @Param("height") int height,
@@ -31,13 +31,13 @@ public interface TerrainObjectRepository extends JpaRepository<TerrainObject, Lo
 
     @Modifying
     @Query("update TerrainObject t set t.terrainName = :terrain_name  where t.terrainId = :terrain_id ")
-    void updateName(@Param("terrain_id") long terrainId,
+    boolean updateName(@Param("terrain_id") long terrainId,
                     @Param("terrain_name") String terrainName
     );
 
     @Modifying
     @Query("update TerrainObject t set t.terrainPath = :terrain_path  where t.terrainId = :terrain_id ")
-    void updatePath(@Param("terrain_id") long terrainId,
+    boolean updatePath(@Param("terrain_id") long terrainId,
                     @Param("terrain_path") String terrainPath
     );
 }

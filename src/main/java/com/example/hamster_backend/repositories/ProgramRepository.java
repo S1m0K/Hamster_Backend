@@ -20,19 +20,19 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
 
     @Modifying
     @Query("update Program p set p.sourceCode = :source_code  where p.programId = :program_id ")
-    void update(@Param("program_id") long programId,
+    boolean update(@Param("program_id") long programId,
                 @Param("source_code") String sourceCode
     );
 
     @Modifying
     @Query("update Program p set p.programName = :program_name  where p.programId = :program_id ")
-    void updateName(@Param("program_id") long programId,
+    boolean updateName(@Param("program_id") long programId,
                 @Param("program_name") String programName
     );
 
     @Modifying
     @Query("update Program p set p.programPath = :program_path  where p.programId = :program_id ")
-    void updatePath(@Param("program_id") long programId,
+    boolean updatePath(@Param("program_id") long programId,
                     @Param("program_path") String programPath
     );
 

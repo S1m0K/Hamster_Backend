@@ -21,35 +21,38 @@ public class ProgramServiceImpl implements ProgramService {
 
     @Autowired
     UserService userService;
+    //TODO: check if really necessary
+//    @Override
+//    public void compareAndUpdateDatabase(Program program) {
+//        program.setHashValue(program.hashCode());
+//        Set<Program> userPrograms = programRepository.findAllByUserId(program.getUserId());
+//
+//        if (!userPrograms.isEmpty()) {
+//            userPrograms.forEach(t -> {
+//                if (t.getHashValue() == program.getHashValue()) {
+//                    t = program;
+//                    programRepository.save(t);
+//                }
+//            });
+//        } else {
+//            programRepository.save(program);
+//        }
+//    }
+
 
     @Override
-    public void compareAndUpdateDatabase(Program program) {
-        program.setHashValue(program.hashCode());
-        Set<Program> userPrograms = programRepository.findAllByUserId(program.getUserId());
-
-        if (!userPrograms.isEmpty()) {
-            userPrograms.forEach(t -> {
-                if (t.getHashValue() == program.getHashValue()) {
-                    t = program;
-                    programRepository.save(t);
-                }
-            });
-        } else {
-            programRepository.save(program);
-        }
-    }
-
-
-    @Override
-    public void delete(long programId) {
+    public boolean delete(long programId) {
         Optional<Program> o = programRepository.findById(programId);
         if (o.isPresent()) {
             Program p = o.get();
             long userId = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
             if (userId == p.getUserId()) {
                 programRepository.delete(p);
+                Optional<Program> o2 = programRepository.findById(programId);
+                return o2.isEmpty();
             }
         }
+        return false;
     }
 
     @Override
@@ -92,26 +95,31 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public void save(Program program) {
+    public Program save(Program program) {
+        return programRepository.save(program);
+    }
+
+    @Override
+    public boolean update(Program program) {
         Optional<Program> o = programRepository.findById(program.getProgramId());
         if (o.isPresent()) {
             Program p = o.get();
             long userId = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
             if (userId == p.getUserId()) {
-                programRepository.update(p.getProgramId(), p.getSourceCode());
+                return programRepository.update(p.getProgramId(), p.getSourceCode());
             }
-        } else {
-            programRepository.save(program);
         }
+        return false;
+    }
+
+
+    @Override
+    public boolean updatePath(Program program) {
+        return programRepository.updatePath(program.getProgramId(), program.getProgramPath());
     }
 
     @Override
-    public void updatePath(Program program) {
-        programRepository.updatePath(program.getProgramId(), program.getProgramPath());
-    }
-
-    @Override
-    public void updateName(Program program) {
-        programRepository.updateName(program.getProgramId(), program.getProgramName());
+    public boolean updateName(Program program) {
+        return programRepository.updateName(program.getProgramId(), program.getProgramName());
     }
 }
