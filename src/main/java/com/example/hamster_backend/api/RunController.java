@@ -1,7 +1,7 @@
 package com.example.hamster_backend.api;
 
 import com.example.hamster_backend.hamsterEvaluation.workbench.Workbench;
-import com.example.hamster_backend.model.entities.ProgramRunFiles;
+import com.example.hamster_backend.model.entities.ProgramRunFilePaths;
 import com.example.hamster_backend.model.entities.User;
 import com.example.hamster_backend.service.ProgramService;
 import com.example.hamster_backend.service.TerrainObjectService;
@@ -37,7 +37,7 @@ public class RunController {
     @ResponseBody
     public ResponseEntity<?> runProgram(@PathVariable("program_id") long programId, @PathVariable("terrain_id") long terrainId, Principal principal) {
         User user = userService.findUserByUsername(principal.getName());
-        ProgramRunFiles runFiles = runService.getRunFiles(programId, terrainId, user);
-        return new ResponseEntity<>(wb.startProgram(runFiles.mainMethodContainingPath, runFiles.terrainPath), HttpStatus.OK);
+        ProgramRunFilePaths runFilePaths = runService.getRunFilePaths(programId, terrainId, user);
+        return new ResponseEntity<>(wb.startProgram(runFilePaths.mainMethodContainingPath, runFilePaths.terrainPath), HttpStatus.OK);
     }
 }

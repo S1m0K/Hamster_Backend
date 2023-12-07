@@ -19,22 +19,6 @@ public class TerrainObjectServiceImpl implements TerrainObjectService {
     @Autowired
     UserService userService;
 
-    @Override
-    public void compareAndUpdateDatabase(TerrainObject terrainObject) {
-        terrainObject.setHashValue(terrainObject.hashCode());
-        Set<TerrainObject> userTerrains = terrainObjectRepository.findAllByUserId(terrainObject.getUserId());
-
-        if (!userTerrains.isEmpty()) {
-            userTerrains.forEach(t -> {
-                if (t.getHashValue() == terrainObject.getHashValue()) {
-                    t = terrainObject;
-                    terrainObjectRepository.save(t);
-                }
-            });
-        } else {
-            terrainObjectRepository.save(terrainObject);
-        }
-    }
 
     @Override
     public Set<TerrainObject> getTerrainObjectBasicData(long id) {

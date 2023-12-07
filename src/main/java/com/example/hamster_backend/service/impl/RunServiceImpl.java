@@ -1,11 +1,10 @@
 package com.example.hamster_backend.service.impl;
 
-import com.example.hamster_backend.api.RunController;
 import com.example.hamster_backend.hamsterEvaluation.simulation.model.Terrain;
 import com.example.hamster_backend.hamsterEvaluation.workbench.Workbench;
 import com.example.hamster_backend.model.WriteFile;
 import com.example.hamster_backend.model.entities.Program;
-import com.example.hamster_backend.model.entities.ProgramRunFiles;
+import com.example.hamster_backend.model.entities.ProgramRunFilePaths;
 import com.example.hamster_backend.model.entities.TerrainObject;
 import com.example.hamster_backend.model.entities.User;
 import com.example.hamster_backend.service.ProgramService;
@@ -56,7 +55,7 @@ public class RunServiceImpl implements RunService {
         return terrainPath;
     }
 
-    public ProgramRunFiles getRunFiles(long programId, long terrainId, User user) {
+    public ProgramRunFilePaths getRunFilePaths(long programId, long terrainId, User user) {
         String terrainFilePath = createTerrainFile(user, terrainId);
 
         Program program = programService.getProgram(programId);
@@ -67,6 +66,6 @@ public class RunServiceImpl implements RunService {
         wb.getJsonObject().clear();
         String mainMethodContainingPath = String.format("src/main/resources/hamster/%s/%s.ham", user.getUsername(),
                 program.getProgramName());
-        return new ProgramRunFiles(terrainFilePath, mainMethodContainingPath);
+        return new ProgramRunFilePaths(terrainFilePath, mainMethodContainingPath);
     }
 }

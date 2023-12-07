@@ -25,11 +25,7 @@ public class TerrainObject {
     @Column(name = "USER_ID")
     private long userId;
 
-    @JsonIgnore
-    @Column(name = "HASH_VALUE", unique = true)
-    private int hashValue;
-
-    @Column(name = "TERRAIN_NAME", unique = true)
+    @Column(name = "TERRAIN_NAME")
     private String terrainName;
 
     @Column(name = "WIDTH")
