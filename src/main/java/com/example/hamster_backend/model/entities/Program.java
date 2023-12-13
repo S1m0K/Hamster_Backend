@@ -20,9 +20,9 @@ import java.util.regex.Pattern;
 @Table(name = "PROGRAM")
 public class Program implements Comparable {
     @Id
-    @Column(name = "ID")
     @SequenceGenerator(name = "program_seq", sequenceName = "PROGRAM_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "program_seq")
+    @Column(name = "ID")
     private long programId;
 
     @Column(name = "USER_ID")

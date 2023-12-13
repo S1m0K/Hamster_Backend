@@ -1,6 +1,5 @@
 package com.example.hamster_backend.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;

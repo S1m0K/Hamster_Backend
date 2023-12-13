@@ -26,7 +26,7 @@ public class ProgramController {
 
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping(path = "save")
-    public ResponseEntity<?> saveProgram(@RequestBody Program program, Principal principal) {
+    public ResponseEntity<?> saveProgram(@RequestBody @Valid Program program, Principal principal) {
         User user = userService.findUserByUsername(principal.getName());
         program.setUserId(user.getId());
         Program savedProgram = programService.save(program);
