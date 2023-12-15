@@ -28,10 +28,6 @@ public class Program implements Comparable {
     @Column(name = "USER_ID")
     private long userId;
 
-    @JsonIgnore
-    @Column(name = "HASH_VALUE", unique = true)
-    private int hashValue;
-
     @Column(name = "PROGRAM_NAME", unique = true)
     private String programName;
 
