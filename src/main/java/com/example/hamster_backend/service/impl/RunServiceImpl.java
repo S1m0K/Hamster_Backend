@@ -30,7 +30,7 @@ public class RunServiceImpl implements RunService {
     private final Workbench wb = Workbench.getWorkbench();
 
     private ArrayList<Program> getProgramsToCompile(Program program) {
-        ArrayList<Program> programsToCompile = new ArrayList<>(programService.getAllNeededProgramToRun(program.getSourceCode()));
+        ArrayList<Program> programsToCompile = new ArrayList<>(programService.getAllNeededProgramToRun(program));
         if (!programsToCompile.isEmpty()) {
             programsToCompile = resolveCompileOrder(programsToCompile);
         }

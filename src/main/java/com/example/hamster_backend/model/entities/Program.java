@@ -1,13 +1,10 @@
 package com.example.hamster_backend.model.entities;
 
 import com.example.hamster_backend.model.QuickSort;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,22 +53,17 @@ public class Program implements Comparable {
     @Override
     public int compareTo(Object o) throws ClassCastException {
         if (!(o instanceof Program)) throw new ClassCastException("A program object expected");
-        Program cProgram = (Program) o;
-        if (this.hashCode() == cProgram.hashCode()) return 0;
+        Program program = (Program) o;
 
+        Set<String> usedExternalClasses = this.extractUsedExternalClasses();
+        Set<String> usedExternalClassesFromSecondProgram = program.extractUsedExternalClasses();
 
-        boolean containsAny = false;
-        for (String s : extractClassNames(cProgram.getSourceCode())) {
-            if (extractImportedClasses(this.getSourceCode()).contains(s)) {
-                containsAny = true;
-                break;
-            }
-        }
-
-        if (containsAny) {
+        if (usedExternalClasses.contains(program.programName)) {
             return 1;
+        } else if (usedExternalClassesFromSecondProgram.contains(this.programName)) {
+            return -1;
         }
-        return -1;
+        return 0;
     }
 
 
@@ -92,34 +84,32 @@ public class Program implements Comparable {
         return classNames;
     }
 
-    public static ArrayList<String> extractImportedClasses(String input) {
-        String pattern = "\\s*import\\s+([a-zA-Z0-9_.]*)\\s*;";
-        ArrayList<String> importedClasses = new ArrayList<>();
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(input);
+    public Set<String> extractUsedExternalClasses() {
+        Set<String> usedExternalClasses = new HashSet<>();
+        String stringPattern = "(=\\s*new\\s+[A-z]*\\s*\\()";
+        Pattern pattern = Pattern.compile(stringPattern);
+        Matcher matcher = pattern.matcher(this.sourceCode);
 
-        while (m.find()) {
-            String s = m.group();
-            s = s.replace("import", "");
-            s = s.replace(";", "");
-            s = s.replace(" ", "");
-            String[] strings = s.split("\\.");
-            s = strings[strings.length - 1];
-            importedClasses.add(s);
+        while (matcher.find()) {
+            String s = matcher.group();
+            s = s.replace("new", "");
+            s = s.replace("(", "");
+            s = s.replace("=", "");
+            usedExternalClasses.add(s.trim());
         }
-        return importedClasses;
+        return usedExternalClasses;
     }
 
-    private static Program getMainFile(ArrayList<Program> programs) {
-        Optional<Program> programWithMain = programs.stream()
-                .filter(p -> {
-                    Pattern mainPattern = Pattern.compile("public\\s+static\\s+void\\s+main");
-                    Matcher mainMatcher = mainPattern.matcher(p.getSourceCode());
-                    return mainMatcher.find();
-                })
-                .findFirst();
-        return programWithMain.orElse(null);
-    }
+//    private static Program getMainFile(ArrayList<Program> programs) {
+//        Optional<Program> programWithMain = programs.stream()
+//                .filter(p -> {
+//                    Pattern mainPattern = Pattern.compile("public\\s+static\\s+void\\s+main");
+//                    Matcher mainMatcher = mainPattern.matcher(p.getSourceCode());
+//                    return mainMatcher.find();
+//                })
+//                .findFirst();
+//        return programWithMain.orElse(null);
+//    }
 
     public static ArrayList<Program> resolveCompileOrder(ArrayList<Program> programs) {
         ArrayList<Comparable> sortedPrograms = (ArrayList<Comparable>) programs.clone();

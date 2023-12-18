@@ -75,15 +75,15 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public Set<Program> getAllNeededProgramToRun(String mainFileCode) {
+    public Set<Program> getAllNeededProgramToRun(Program mainProgram) {
         Set<String> foundClasses = new HashSet<>();
         Set<Program> programs = new HashSet<>();
-        Set<String> classNames = new HashSet<>(Program.extractImportedClasses(mainFileCode));
+        Set<String> classNames = new HashSet<>(mainProgram.extractUsedExternalClasses());
 
         while (!classNames.isEmpty()) {
             classNames.forEach(n -> {
                 Program program = programRepository.findProgramByProgramName(n);
-                classNames.addAll(Program.extractImportedClasses(program.getSourceCode()));
+                classNames.addAll(program.extractUsedExternalClasses());
                 foundClasses.add(n);
             });
             classNames.removeIf(foundClasses::contains);

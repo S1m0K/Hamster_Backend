@@ -25,6 +25,6 @@ public interface ProgramService {
 
     ArrayList<Program> getProgramsByNames(ArrayList<String> names);
 
-    Set<Program> getAllNeededProgramToRun(String mainFileCode);
+    Set<Program> getAllNeededProgramToRun(Program mainProgram);
 
 }
