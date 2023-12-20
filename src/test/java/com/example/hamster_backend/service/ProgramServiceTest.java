@@ -63,7 +63,7 @@ public class ProgramServiceTest {
 
         when(programRepository.findProgramByProgramName("Second")).thenReturn(p2);
         when(programRepository.findProgramByProgramName("Third")).thenReturn(p3);
-        //TODO Greini frogen wieseo is mock nit geht
+
         Set<Program> programsNeeded = programService.getAllNeededProgramToRun(mainProgram);
 
         Set<Program> expectedProgramsNeeded = new HashSet<>();

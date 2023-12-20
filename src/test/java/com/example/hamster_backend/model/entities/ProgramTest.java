@@ -1,4 +1,4 @@
-package com.example.hamster_backend.model;
+package com.example.hamster_backend.model.entities;
 
 import com.example.hamster_backend.model.entities.Program;
 import org.junit.jupiter.api.Test;

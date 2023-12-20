@@ -111,6 +111,7 @@ public class Workbench {
         private int[][] corn, wall;
 
     }
+
     /**
      * Starting a programm with standard terrain
      *
@@ -186,7 +187,7 @@ public class Workbench {
         });
         terrain.getDefaultHamster().setDir(ViewDirection.viewDirectionIntegerMap.get(hamster.getViewDirection()));
         terrain.getDefaultHamster().setMouth(hamster.getCntCornInMouth());
-        terrain.getDefaultHamster().setXY(hamster.getXCord(),  hamster.getYCord());
+        terrain.getDefaultHamster().setXY(hamster.getXCord(), hamster.getYCord());
         //TODO MAP??? dont know what to do here!
         return terrain;
     }
