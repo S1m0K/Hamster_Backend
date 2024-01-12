@@ -123,4 +123,11 @@ public class Program implements Comparable {
         this.programName = programName;
         this.programPath = programPath;
     }
+
+    public char getProgramType() {
+        if (this.sourceCode.contains("class")) {
+            return 'o';
+        }
+        return 'c';
+    }
 }

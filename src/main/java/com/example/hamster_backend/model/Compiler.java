@@ -13,7 +13,8 @@ public class Compiler {
         return path.toString();
     }
 
-    public static boolean createCompilingDir(String path) {
+    public static boolean
+    createCompilingDir(String path) {
         File f = new File(path);
         if (f.exists()) {
             if (!f.delete()) {

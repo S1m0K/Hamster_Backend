@@ -1,7 +1,9 @@
 package com.example.hamster_backend.service.impl;
 
+import com.example.hamster_backend.hamsterEvaluation.model.HamsterFile;
 import com.example.hamster_backend.hamsterEvaluation.simulation.model.Terrain;
 import com.example.hamster_backend.hamsterEvaluation.workbench.Workbench;
+import com.example.hamster_backend.model.Compiler;
 import com.example.hamster_backend.model.WriteFile;
 import com.example.hamster_backend.model.entities.Program;
 import com.example.hamster_backend.model.entities.ProgramRunFilePaths;
@@ -15,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.example.hamster_backend.model.entities.Program.resolveCompileOrder;
@@ -55,17 +58,24 @@ public class RunServiceImpl implements RunService {
         return terrainPath;
     }
 
-    public ProgramRunFilePaths getRunFilePaths(long programId, long terrainId, User user) {
+    public ProgramRunFilePaths getCompiledRunFilePaths(long programId, long terrainId, User user) {
         String terrainFilePath = createTerrainFile(user, terrainId);
 
         Program program = programService.getProgram(programId);
         ArrayList<Program> programsToCompile = getProgramsToCompile(program);
 
-        compileFiles(programsToCompile, program);
+        String path = "C:\\Users\\simon\\IdeaProjects\\Hamster_Backend\\src\\main\\resources\\CompDir" + user.getId();
+        Compiler.createCompilingDir(path);
+        for (Program p : programsToCompile) {
+            HamsterFile hamsterFile = new HamsterFile(p.getSourceCode(), p.getProgramType());
+            File f = hamsterFile.getFile();
+            String sourceCodeFilePath = String.format("src/main/resources/CompDir/%d/%s.ham", user.getId(), program.getProgramName());
+            Compiler.addFileToCompilingDir(f.getPath(), sourceCodeFilePath);
+            Compiler.compile(path, path, sourceCodeFilePath);
+        }
 
-        wb.getJsonObject().clear();
-        String mainMethodContainingPath = String.format("src/main/resources/hamster/%s/%s.ham", user.getUsername(),
+        String mainMethodContainingCompiledPath = String.format("src/main/resources/CompDir/%d/%s.class", user.getId(),
                 program.getProgramName());
-        return new ProgramRunFilePaths(terrainFilePath, mainMethodContainingPath);
+        return new ProgramRunFilePaths(terrainFilePath, mainMethodContainingCompiledPath);
     }
 }
