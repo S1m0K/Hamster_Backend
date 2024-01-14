@@ -1,18 +1,16 @@
 
 package com.example.hamster_backend;
 
-import com.example.hamster_backend.api.AuthController;
 import com.example.hamster_backend.api.TerrainObjectController;
-import com.example.hamster_backend.hamsterEvaluation.simulation.model.Terrain;
 import com.example.hamster_backend.model.entities.HamsterObject;
 import com.example.hamster_backend.model.entities.TerrainObject;
-import com.example.hamster_backend.model.entities.User;
 import com.example.hamster_backend.model.enums.ViewDirection;
-import com.example.hamster_backend.security.WebSecurityConfig;
-import com.example.hamster_backend.service.CustomPasswordEncoder;
 import com.example.hamster_backend.service.TerrainObjectService;
-import com.example.hamster_backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import at.ac.htlinn.hamsterbackend.user.UserService;
+import at.ac.htlinn.hamsterbackend.user.model.User;
+
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

@@ -3,7 +3,9 @@ package com.example.hamster_backend.service.impl;
 import com.example.hamster_backend.model.entities.TerrainObject;
 import com.example.hamster_backend.repositories.TerrainObjectRepository;
 import com.example.hamster_backend.service.TerrainObjectService;
-import com.example.hamster_backend.service.UserService;
+
+import at.ac.htlinn.hamsterbackend.user.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

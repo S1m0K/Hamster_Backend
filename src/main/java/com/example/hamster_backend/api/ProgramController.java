@@ -2,9 +2,11 @@ package com.example.hamster_backend.api;
 
 import com.example.hamster_backend.model.entities.Program;
 import com.example.hamster_backend.model.entities.TerrainObject;
-import com.example.hamster_backend.model.entities.User;
 import com.example.hamster_backend.service.ProgramService;
-import com.example.hamster_backend.service.UserService;
+
+import at.ac.htlinn.hamsterbackend.user.UserService;
+import at.ac.htlinn.hamsterbackend.user.model.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

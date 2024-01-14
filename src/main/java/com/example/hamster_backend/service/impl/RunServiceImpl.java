@@ -1,17 +1,19 @@
 package com.example.hamster_backend.service.impl;
 
-import com.example.hamster_backend.hamsterEvaluation.model.HamsterFile;
-import com.example.hamster_backend.hamsterEvaluation.simulation.model.Terrain;
-import com.example.hamster_backend.hamsterEvaluation.workbench.Workbench;
 import com.example.hamster_backend.model.Compiler;
 import com.example.hamster_backend.model.WriteFile;
 import com.example.hamster_backend.model.entities.Program;
 import com.example.hamster_backend.model.entities.ProgramRunFilePaths;
 import com.example.hamster_backend.model.entities.TerrainObject;
-import com.example.hamster_backend.model.entities.User;
 import com.example.hamster_backend.service.ProgramService;
 import com.example.hamster_backend.service.RunService;
 import com.example.hamster_backend.service.TerrainObjectService;
+
+import at.ac.htlinn.hamsterbackend.hamsterEvaluation.simulation.model.Terrain;
+import at.ac.htlinn.hamsterbackend.hamsterEvaluation.model.HamsterFile;
+import at.ac.htlinn.hamsterbackend.hamsterEvaluation.workbench.Workbench;
+import at.ac.htlinn.hamsterbackend.user.model.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

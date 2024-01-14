@@ -3,7 +3,9 @@ package com.example.hamster_backend.service.impl;
 import com.example.hamster_backend.model.entities.Program;
 import com.example.hamster_backend.repositories.ProgramRepository;
 import com.example.hamster_backend.service.ProgramService;
-import com.example.hamster_backend.service.UserService;
+
+import at.ac.htlinn.hamsterbackend.user.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

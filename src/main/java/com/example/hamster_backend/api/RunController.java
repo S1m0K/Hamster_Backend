@@ -1,10 +1,12 @@
 package com.example.hamster_backend.api;
 
-import com.example.hamster_backend.hamsterEvaluation.workbench.Workbench;
 import com.example.hamster_backend.model.entities.ProgramRunFilePaths;
-import com.example.hamster_backend.model.entities.User;
-import com.example.hamster_backend.service.UserService;
 import com.example.hamster_backend.service.RunService;
+
+import at.ac.htlinn.hamsterbackend.hamsterEvaluation.workbench.Workbench;
+import at.ac.htlinn.hamsterbackend.user.UserService;
+import at.ac.htlinn.hamsterbackend.user.model.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,8 @@
 package com.example.hamster_backend.service;
 
 import com.example.hamster_backend.model.entities.ProgramRunFilePaths;
-import com.example.hamster_backend.model.entities.User;
+
+import at.ac.htlinn.hamsterbackend.user.model.User;
 
 public interface RunService
 {

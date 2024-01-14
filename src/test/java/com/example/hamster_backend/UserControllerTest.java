@@ -6,8 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.hamster_backend.api.UserController;
-import com.example.hamster_backend.model.entities.User;
 import org.junit.Before;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -33,6 +31,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import at.ac.htlinn.hamsterbackend.user.UserController;
+import at.ac.htlinn.hamsterbackend.user.model.User;
 
 @RunWith(SpringRunner.class)
 @EntityScan("com.example.hamster_backend.*")
