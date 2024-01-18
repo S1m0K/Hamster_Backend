@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.example.hamster_backend.model.entities.Program.resolveCompileOrder;
 
 @Service
 public class RunServiceImpl implements RunService {
@@ -32,14 +31,6 @@ public class RunServiceImpl implements RunService {
 
     private final Workbench wb = Workbench.getWorkbench();
 
-    private ArrayList<Program> getProgramsToCompile(Program program) {
-        ArrayList<Program> programsToCompile = new ArrayList<>(programService.getAllNeededProgramToRun(program));
-        if (!programsToCompile.isEmpty()) {
-            programsToCompile = resolveCompileOrder(programsToCompile);
-        }
-        programsToCompile.add(program);//last to compile is main-containing program
-        return programsToCompile;
-    }
 
     private void compileFiles(ArrayList<Program> programsToCompile, Program program) {
         for (Program p : programsToCompile) {
@@ -52,7 +43,7 @@ public class RunServiceImpl implements RunService {
 
     private String createTerrainFile(User user, long terrainId) {
         TerrainObject terrainObject = terrainObjectService.getTerrainObject(terrainId);
-        String terrainPath = String.format("src/main/resources/hamster/%s/%s.ter", user.getUsername(), terrainObject.getTerrainName());
+        String terrainPath = String.format("src/main/resources/RunDir/%d/TerrainDir/%s.ter", user.getId(), terrainObject.getTerrainName());
         Terrain terrain = wb.createHamsterTerrain(terrainObject.getCustomFields(), terrainObject.getHeight(), terrainObject.getWidth(), terrainObject.getDefaultHamster());
         wb.createTerrainFile(terrain, terrainPath);
         return terrainPath;
@@ -62,19 +53,19 @@ public class RunServiceImpl implements RunService {
         String terrainFilePath = createTerrainFile(user, terrainId);
 
         Program program = programService.getProgram(programId);
-        ArrayList<Program> programsToCompile = getProgramsToCompile(program);
+        ArrayList<Program> programsToCompile = new ArrayList<>(programService.getAllNeededProgramToRun(program));
 
-        String path = "C:\\Users\\simon\\IdeaProjects\\Hamster_Backend\\src\\main\\resources\\CompDir" + user.getId();
+        String path = "src\\main\\resources\\RunDir\\" + user.getId() + "\\CompDir";
         Compiler.createCompilingDir(path);
         for (Program p : programsToCompile) {
             HamsterFile hamsterFile = new HamsterFile(p.getSourceCode(), p.getProgramType());
             File f = hamsterFile.getFile();
-            String sourceCodeFilePath = String.format("src/main/resources/CompDir/%d/%s.ham", user.getId(), program.getProgramName());
+            String sourceCodeFilePath = String.format("src/main/resources/RunDir/%d/CompDir/%s.ham", user.getId(), program.getProgramName());
             Compiler.addFileToCompilingDir(f.getPath(), sourceCodeFilePath);
             Compiler.compile(path, path, sourceCodeFilePath);
         }
 
-        String mainMethodContainingCompiledPath = String.format("src/main/resources/CompDir/%d/%s.class", user.getId(),
+        String mainMethodContainingCompiledPath = String.format("src/main/resources/RunDir/%d/CompDir/%s.class", user.getId(),
                 program.getProgramName());
         return new ProgramRunFilePaths(terrainFilePath, mainMethodContainingCompiledPath);
     }

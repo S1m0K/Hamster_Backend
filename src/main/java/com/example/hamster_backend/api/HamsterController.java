@@ -20,8 +20,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.example.hamster_backend.model.entities.Program.resolveCompileOrder;
-
 
 @RestController
 @RequestMapping("/hamster")

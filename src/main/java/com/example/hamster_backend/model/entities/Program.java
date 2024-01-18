@@ -31,9 +31,6 @@ public class Program implements Comparable {
     @Column(name = "SOURCE_CODE")
     private String sourceCode;
 
-    @Transient
-    private int compilationOrder;
-
     @Column(name = "PROGRAM_PATH")
     private String programPath;
 
@@ -98,24 +95,6 @@ public class Program implements Comparable {
             usedExternalClasses.add(s.trim());
         }
         return usedExternalClasses;
-    }
-
-//    private static Program getMainFile(ArrayList<Program> programs) {
-//        Optional<Program> programWithMain = programs.stream()
-//                .filter(p -> {
-//                    Pattern mainPattern = Pattern.compile("public\\s+static\\s+void\\s+main");
-//                    Matcher mainMatcher = mainPattern.matcher(p.getSourceCode());
-//                    return mainMatcher.find();
-//                })
-//                .findFirst();
-//        return programWithMain.orElse(null);
-//    }
-
-    public static ArrayList<Program> resolveCompileOrder(ArrayList<Program> programs) {
-        ArrayList<Comparable> sortedPrograms = (ArrayList<Comparable>) programs.clone();
-        sortedPrograms = QuickSort.sort(sortedPrograms);
-        programs = (ArrayList<Program>) sortedPrograms.clone();
-        return programs;
     }
 
     public Program(long programId, String programName, String programPath) {
