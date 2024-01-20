@@ -1,6 +1,7 @@
 
 package com.example.hamster_backend.security;
 
+import com.example.hamster_backend.user.MyUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +12,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import com.example.hamster_backend.service.CustomPasswordEncoder;
-import com.example.hamster_backend.service.impl.MyUserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity

@@ -1,31 +1,22 @@
 
 package com.example.hamster_backend;
 
-import com.example.hamster_backend.api.AuthController;
-import com.example.hamster_backend.api.TerrainObjectController;
-import com.example.hamster_backend.hamsterEvaluation.simulation.model.Terrain;
-import com.example.hamster_backend.model.entities.HamsterObject;
-import com.example.hamster_backend.model.entities.TerrainObject;
-import com.example.hamster_backend.model.entities.User;
-import com.example.hamster_backend.model.enums.ViewDirection;
-import com.example.hamster_backend.security.WebSecurityConfig;
-import com.example.hamster_backend.service.CustomPasswordEncoder;
-import com.example.hamster_backend.service.TerrainObjectService;
-import com.example.hamster_backend.service.UserService;
+import com.example.hamster_backend.terrain.TerrainObjectController;
+import com.example.hamster_backend.terrain.HamsterObject;
+import com.example.hamster_backend.terrain.TerrainObject;
+import com.example.hamster_backend.user.User;
+import com.example.hamster_backend.terrain.ViewDirection;
+import com.example.hamster_backend.terrain.TerrainObjectService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.thymeleaf.extras.springsecurity5.util.SpringSecurityContextUtils;
 
 
 import static org.mockito.Mockito.when;

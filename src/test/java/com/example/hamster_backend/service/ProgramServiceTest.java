@@ -1,15 +1,12 @@
 package com.example.hamster_backend.service;
 
-import com.example.hamster_backend.model.entities.Program;
-import com.example.hamster_backend.repositories.ProgramRepository;
-import com.example.hamster_backend.service.impl.ProgramServiceImpl;
+import com.example.hamster_backend.program.Program;
+import com.example.hamster_backend.program.ProgramRepository;
+import com.example.hamster_backend.program.ProgramService;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashSet;
 import java.util.Set;

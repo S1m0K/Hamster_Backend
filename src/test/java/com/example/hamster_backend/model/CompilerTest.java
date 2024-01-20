@@ -1,5 +1,6 @@
 package com.example.hamster_backend.model;
 
+import com.example.hamster_backend.run.Compiler;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.hamster_backend.api.UserController;
-import com.example.hamster_backend.model.entities.User;
+import com.example.hamster_backend.user.UserController;
+import com.example.hamster_backend.user.User;
 import org.junit.Before;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package com.example.hamster_backend.model.entities;
 
-import com.example.hamster_backend.model.entities.Program;
+import com.example.hamster_backend.program.Program;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

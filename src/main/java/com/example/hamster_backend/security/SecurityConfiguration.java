@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
-import com.example.hamster_backend.service.CustomPasswordEncoder;
 
 @Configuration
 public class SecurityConfiguration implements WebMvcConfigurer {
