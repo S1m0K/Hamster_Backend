@@ -1,6 +1,6 @@
 package at.ac.htlinn.hamsterbackend.security;
 
-import com.example.hamster_backend.model.entities.Error;
+import at.ac.htlinn.hamsterbackend.configuration.Error;
 import org.hibernate.exception.DataException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

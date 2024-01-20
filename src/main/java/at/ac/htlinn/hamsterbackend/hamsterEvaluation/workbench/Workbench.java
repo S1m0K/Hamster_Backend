@@ -12,9 +12,9 @@ import at.ac.htlinn.hamsterbackend.hamsterEvaluation.debugger.model.DebuggerMode
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import com.example.hamster_backend.model.entities.Field;
-import com.example.hamster_backend.model.entities.HamsterObject;
-import com.example.hamster_backend.model.enums.ViewDirection;
+import at.ac.htlinn.hamsterbackend.terrain.Field;
+import at.ac.htlinn.hamsterbackend.terrain.HamsterObject;
+import at.ac.htlinn.hamsterbackend.terrain.ViewDirection;
 
 import java.io.File;
 import java.io.FileWriter;
