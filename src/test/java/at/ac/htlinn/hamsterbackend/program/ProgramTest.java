@@ -1,6 +1,5 @@
 package at.ac.htlinn.hamsterbackend.program;
 
-import at.ac.htlinn.hamsterbackend.program.Program;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

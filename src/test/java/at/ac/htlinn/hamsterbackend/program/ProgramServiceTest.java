@@ -1,12 +1,9 @@
 package at.ac.htlinn.hamsterbackend.program;
 
-import at.ac.htlinn.hamsterbackend.program.Program;
-import at.ac.htlinn.hamsterbackend.program.ProgramRepository;
-import at.ac.htlinn.hamsterbackend.program.ProgramService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class ProgramServiceTest {
-    @Mock
+    @MockBean
     ProgramRepository programRepository;
 
     @Autowired
@@ -61,7 +58,7 @@ public class ProgramServiceTest {
         when(programRepository.findProgramByProgramName("Second")).thenReturn(p2);
         when(programRepository.findProgramByProgramName("Third")).thenReturn(p3);
 
-        Set<Program> programsNeeded = programService.getAllNeededProgramToRun(mainProgram);
+        Set<Program> programsNeeded = programService.getAllNeededProgramsToRun(mainProgram);
 
         Set<Program> expectedProgramsNeeded = new HashSet<>();
         expectedProgramsNeeded.add(p2);

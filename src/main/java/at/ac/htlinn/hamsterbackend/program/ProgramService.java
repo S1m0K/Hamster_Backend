@@ -72,7 +72,7 @@ public class ProgramService {
     }
 
     
-    public Set<Program> getAllNeededProgramToRun(Program mainProgram) {
+    public Set<Program> getAllNeededProgramsToRun(Program mainProgram) {
         Set<String> foundClasses = new HashSet<>();
         Set<Program> programs = new HashSet<>();
         Set<String> classNames = new HashSet<>(mainProgram.extractUsedExternalClasses());

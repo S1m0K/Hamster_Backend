@@ -2,18 +2,17 @@ package at.ac.htlinn.hamsterbackend.run;
 
 import at.ac.htlinn.hamsterbackend.program.Program;
 import at.ac.htlinn.hamsterbackend.program.ProgramService;
-import at.ac.htlinn.hamsterbackend.run.ProgramRunFilePaths;
-import at.ac.htlinn.hamsterbackend.run.RunService;
 import at.ac.htlinn.hamsterbackend.terrain.*;
 import at.ac.htlinn.hamsterbackend.user.model.User;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -21,10 +20,10 @@ public class RunServiceTest {
     @Autowired
     RunService runService;
 
-    @InjectMocks
+    @MockBean
     ProgramService programService;
 
-    @InjectMocks
+    @MockBean
     TerrainObjectService terrainObjectService;
 
     @Test
@@ -100,10 +99,13 @@ public class RunServiceTest {
         programs.add(program3);
 
         when(programService.getProgram(program1.getProgramId())).thenReturn(program1);
-        when(programService.getAllNeededProgramToRun(program1)).thenReturn(programs);
+        when(programService.getAllNeededProgramsToRun(program1)).thenReturn(programs);
         when(terrainObjectService.getTerrainObject(terrain.getTerrainId())).thenReturn(terrain);
 
         ProgramRunFilePaths response = runService.getCompiledRunFilePaths(program1.getProgramId(), terrain.getTerrainId(), user);
+
+        assertEquals("src\\main\\resources\\RunDir\\123\\CompDir\\TestProgram1.class", response.mainMethodContainingPath);
+        assertEquals("src\\main\\resources\\RunDir\\123\\TerrainDir\\TestTerrain.ter", response.terrainPath);
 
     }
 }

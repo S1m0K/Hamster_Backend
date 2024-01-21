@@ -32,13 +32,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import at.ac.htlinn.hamsterbackend.user.UserController;
 import at.ac.htlinn.hamsterbackend.user.model.User;
 
 @RunWith(SpringRunner.class)
-@EntityScan("com.example.hamster_backend.*")
-@ComponentScan(basePackages = { "com.example.hamster_backend.*" })
-@EnableJpaRepositories(basePackages = "com.example.hamster_backend.*")
+@EntityScan("at.ac.htlinn.hamsterbackend.*")
+@ComponentScan(basePackages = { "at.ac.htlinn.hamsterbackend.*" })
+@EnableJpaRepositories(basePackages = "at.ac.htlinn.hamsterbackend.*")
 @AutoConfigureMockMvc
 @EnableAutoConfiguration
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = { UserController.class })
@@ -70,7 +69,7 @@ class UserControllerTest {
 	@Test
 	@WithMockUser(authorities = "ADMIN")
 	public void testGetUsers() throws Exception {
-		MvcResult result = mockMvc.perform(get("https://localhost:" + port + "/user/users"))
+		MvcResult result = mockMvc.perform(get("https://localhost:" + port + "/api/user/users"))
 				.andExpect(status().is(HttpStatus.OK.value())).andReturn();
 
 		output(result.getResponse().getStatus()); 

@@ -43,12 +43,4 @@ public class Compiler {
 
         return Main.compile(args1);
     }
-
-    public static boolean addFileToCompilingDir(String sourceFilePath, String destFilePath) {
-        File sourceFile = new File(sourceFilePath);
-        File destFile = new File(destFilePath);
-
-
-        return false;
-    }
 }

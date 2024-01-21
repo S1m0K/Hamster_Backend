@@ -1,7 +1,6 @@
 package at.ac.htlinn.hamsterbackend.run;
 
 import org.junit.jupiter.api.Test;
-import at.ac.htlinn.hamsterbackend.run.Compiler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
