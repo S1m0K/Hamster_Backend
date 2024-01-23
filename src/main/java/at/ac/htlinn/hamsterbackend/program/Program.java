@@ -1,5 +1,6 @@
 package at.ac.htlinn.hamsterbackend.program;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class Program implements Comparable {
     private long programId;
 
     @Column(name = "USER_ID")
+    @JsonIgnore
     private long userId;
 
     @Column(name = "PROGRAM_NAME", unique = true)
@@ -103,6 +105,7 @@ public class Program implements Comparable {
         this.programId = programId;
         this.programName = programName;
         this.programPath = programPath;
+        this.sourceCode = "";
     }
 
     public char getProgramType() {
