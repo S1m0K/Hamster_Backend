@@ -1,0 +1,26 @@
+= HamsterBackend API Guide
+// keine Ahnung, was diese Parameter machen!
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+= CourseManagement API
+
+== Courses
+
+=== Get all courses
+
+This `Get` request returns a list of all courses.
+
+==== Request
+
+.request
+include::{snippets}/getCourses/http-request.adoc[]
+
+==== Response
+
+.response
+include::{snippets}/getCourses/http-response.adoc[]
