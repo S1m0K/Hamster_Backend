@@ -1,5 +1,6 @@
 package at.ac.htlinn.hamsterbackend.terrain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ public class TerrainObject {
     @Column(name = "ID")
     private long terrainId;
 
+    @JsonIgnore
     @Column(name = "USER_ID")
     private long userId;
 
@@ -33,8 +35,7 @@ public class TerrainObject {
     @Column(name = "HEIGHT")
     private int height;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "hamster_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "terrainObject")
     private HamsterObject defaultHamster;
 
     @OneToMany(targetEntity = Field.class, mappedBy = "terrainObject", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

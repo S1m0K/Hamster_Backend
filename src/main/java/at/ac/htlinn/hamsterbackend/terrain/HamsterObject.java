@@ -20,14 +20,9 @@ public class HamsterObject {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hamster_seq")
     private long hamster_id;
 
-//    @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name = "TERRAIN_ID")
-//    private TerrainObject terrainObject;
-
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "TERRAIN_ID")
+    @JoinColumn(name = "TERRAIN_ID", unique = true)
+    @JsonIgnore
     private TerrainObject terrainObject;
 
     @Column(name = "X_CORD")
