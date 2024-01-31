@@ -66,46 +66,7 @@ public class TerrainObjectController {
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping(path = "get/{terrainObject_id}")
     public ResponseEntity<TerrainObject> getProgram(@PathVariable("terrainObject_id") long terrainObject_id) {
-        HamsterObject hamsterObject = HamsterObject.builder()
-                .hamster_id(123L)
-                .xCord(1)
-                .yCord(1)
-                .cntCornInMouth(10)
-                .viewDirection(ViewDirection.NORTH)
-                .build();
-
-        Field f = Field.builder()
-                .field_id(123)
-                .cntCorn(12)
-                .xCord(1)
-                .yCord(4)
-                .wall(false)
-                .build();
-
-        Field f2 = Field.builder()
-                .field_id(124)
-                .cntCorn(12)
-                .xCord(1)
-                .yCord(4)
-                .wall(false)
-                .build();
-
-        Set<Field> customFields = new HashSet<>();
-        customFields.add(f);
-        customFields.add(f2);
-
-        TerrainObject terrainObject = TerrainObject.builder()
-                .terrainName("testTerrain")
-                .terrainPath("root/testPackage/")
-                .height(12)
-                .width(15)
-                .defaultHamster(hamsterObject)
-                .customFields(customFields)
-                .terrainId(1)
-                .build();
-
-
-//        TerrainObject terrainObject = terrainObjectService.getTerrainObject(terrainObject_id);
+        TerrainObject terrainObject = terrainObjectService.getTerrainObject(terrainObject_id);
         return ResponseEntity.ok(terrainObject);
     }
 
