@@ -1,5 +1,6 @@
 package at.ac.htlinn.hamsterbackend.courseManagement.activity;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,12 +61,12 @@ public class ActivityController {
 	 */
 	@GetMapping("{activityId}")
 	@PreAuthorize("hasAuthority('USER')")
-	public ResponseEntity<?> getActivityById(@PathVariable int activityId) {
+	public ResponseEntity<?> getActivityById(@PathVariable int activityId, Principal principal) {
 		Activity activity = activityService.getActivityById(activityId);
 		if (activity == null) return new ResponseEntity<>("Activity does not exist!", HttpStatus.NOT_FOUND);
 
 		// if user is student or teacher, check if user is in course
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user))
 			if (!studentService.isUserStudent(user.getId(), activity.getCourse().getId())
 					&& !teacherService.isUserTeacher(user.getId(), activity.getCourse().getId()))
@@ -90,14 +91,14 @@ public class ActivityController {
 	@GetMapping
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> getAllActivitiesByCourseId(
-			@RequestParam(name = "course_id", required = true) Integer courseId) {
+			@RequestParam(name = "course_id", required = true) Integer courseId, Principal principal) {
 		
 		// check if course exists
 		Course course = courseService.getCourseById(courseId);
 		if (course == null) return new ResponseEntity<>("Course does not exist!", HttpStatus.NOT_FOUND);
 
 		// if user is student or teacher, check if user is in course
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user))
 			if (!studentService.isUserStudent(user.getId(), course.getId())
 					&& !teacherService.isUserTeacher(user.getId(), course.getId()))
@@ -124,7 +125,7 @@ public class ActivityController {
 	 */
 	@PostMapping
 	@PreAuthorize("hasAuthority('TEACHER')")
-	public ResponseEntity<?> createActivity(@RequestBody JsonNode node) {
+	public ResponseEntity<?> createActivity(@RequestBody JsonNode node, Principal principal) {
 		// get DTO object from JSON
 		ExerciseDto exerciseDto = mapper.convertValue(node.get("exercise"), ExerciseDto.class);
 		ContestDto contestDto = mapper.convertValue(node.get("contest"), ContestDto.class);
@@ -141,7 +142,7 @@ public class ActivityController {
 			activity = new Contest(contestDto, courseService);
 		
 		// if user is a teacher, they must be teacher of the specified course
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user) && activity.getCourse().getTeacher().getId() != user.getId())
 			return new ResponseEntity<>("You must be this courses teacher to add an activity to it!", HttpStatus.FORBIDDEN);
 		
@@ -159,7 +160,8 @@ public class ActivityController {
 	 */
 	@PatchMapping("{activityId}")
 	@PreAuthorize("hasAuthority('TEACHER')")
-	public ResponseEntity<?> updateActivity(@PathVariable int activityId, @RequestBody Map<String, Object> fields) {
+	public ResponseEntity<?> updateActivity(@PathVariable int activityId, @RequestBody Map<String, Object> fields,
+			Principal principal) {
 		
 	    // Sanitize and validate the data
 	    if (activityId <= 0 || fields == null || fields.isEmpty()){
@@ -170,7 +172,7 @@ public class ActivityController {
 	    if (activity == null) return new ResponseEntity<>("Activity does not exist!", HttpStatus.NOT_FOUND);
 
 		// if user is a teacher, they must be teacher of the specified course
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user) && activity.getCourse().getTeacher().getId() != user.getId())
 			return new ResponseEntity<>("You must be this courses teacher to change its activities.", HttpStatus.FORBIDDEN);
 		
@@ -197,11 +199,11 @@ public class ActivityController {
 	 */
 	@DeleteMapping("{activityId}")
 	@PreAuthorize("hasAuthority('TEACHER')")
-	public ResponseEntity<?> deleteActivity(@PathVariable int activityId) {
+	public ResponseEntity<?> deleteActivity(@PathVariable int activityId, Principal principal) {
 	    Activity activity = activityService.getActivityById(activityId);
 
 		// if user is a teacher, they must be teacher of the specified course
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user) && activity.getCourse().getTeacher().getId() != user.getId())
 			return new ResponseEntity<>("You must be this courses teacher to delete its activities.", HttpStatus.FORBIDDEN);
 		

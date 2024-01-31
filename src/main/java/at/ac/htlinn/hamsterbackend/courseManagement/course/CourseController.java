@@ -1,5 +1,6 @@
 package at.ac.htlinn.hamsterbackend.courseManagement.course;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -95,14 +96,14 @@ public class CourseController {
 	 */
 	@PostMapping("")
 	@PreAuthorize("hasAuthority('TEACHER')")
-	public ResponseEntity<?> createCourse(@RequestBody JsonNode node) {
-		CourseDto courseDTO = mapper.convertValue(node.get("course"), CourseDto.class);
-		if (courseDTO == null) return new ResponseEntity<>("Request body is invalid!", HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> createCourse(@RequestBody JsonNode node, Principal principal) {
+		CourseDto courseDto = mapper.convertValue(node.get("course"), CourseDto.class);
+		if (courseDto == null) return new ResponseEntity<>("Request body is invalid!", HttpStatus.BAD_REQUEST);
 		
 		// set teacher id to active user id
-		int user_id = userService.getCurrentUser().getId();
-		courseDTO.setTeacherId(user_id);
-		Course course = new Course(courseDTO, userService);
+		User user = userService.findUserByUsername(principal.getName());
+		courseDto.setTeacherId(user.getId());
+		Course course = new Course(courseDto, userService);
 		
 		course = courseService.saveCourse(course);
 		return course != null ? ResponseEntity.ok(course.getId())
@@ -118,7 +119,7 @@ public class CourseController {
 	 */
 	@PatchMapping("{courseId}")
 	@PreAuthorize("hasAuthority('TEACHER')")
-	public ResponseEntity<?> updateCourse(@PathVariable int courseId, @RequestBody Map<String, Object> fields) {
+	public ResponseEntity<?> updateCourse(@PathVariable int courseId, @RequestBody Map<String, Object> fields, Principal principal) {
 		
 	    // Sanitize and validate the data
 	    if (courseId <= 0 || fields == null || fields.isEmpty()){
@@ -129,7 +130,7 @@ public class CourseController {
 	    if (course == null) return new ResponseEntity<>("Course does not exist!", HttpStatus.NOT_FOUND);
 
 		// if user is a teacher, they must be teacher of the specified course
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user) && course.getTeacher().getId() != user.getId())
 			return new ResponseEntity<>("You must be this course's teacher to make changes to it.", HttpStatus.FORBIDDEN);
 		
@@ -156,14 +157,14 @@ public class CourseController {
 	 */
 	@DeleteMapping("/{courseId}")
 	@PreAuthorize("hasAuthority('TEACHER')")
-	public ResponseEntity<?> deleteCourse(@PathVariable int courseId) {
+	public ResponseEntity<?> deleteCourse(@PathVariable int courseId, Principal principal) {
 		
 		// check if course exists
 		Course course = courseService.getCourseById(courseId);
 		if (course == null) return new ResponseEntity<>("Course does not exist!", HttpStatus.NOT_FOUND);
 		
 		// if user is a teacher, they must be teacher of the specified course
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user) && course.getTeacher().getId() != user.getId())
 			return new ResponseEntity<>("You must be this courses teacher to delete it.", HttpStatus.FORBIDDEN);
 		

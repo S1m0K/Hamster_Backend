@@ -20,8 +20,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import at.ac.htlinn.hamsterbackend.courseManagement.course.model.Course;
-import at.ac.htlinn.hamsterbackend.user.model.User;
+import at.ac.htlinn.hamsterbackend.courseManagement.course.dto.CourseDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -37,19 +36,13 @@ public class CourseIntegrationTest {
 	
     @Autowired
     private MockMvc mockMvc;
-    
-	private final User teacher = User.builder()
-			.id(1)
-			.build();
 	
-	private final Course course = Course.builder()
-			.id(1)
+	private final CourseDto course = CourseDto.builder()
 			.name("hans")
-			.teacher(teacher)
 			.build();
     
     @Test
-    @WithMockUser(authorities = "ADMIN")
+    @WithMockUser(username = "admin", password = "admin", authorities = "ADMIN")
     public void createAndDeleteCourse() throws Exception {
     	
 		JsonNode node = objectMapper.valueToTree(course);

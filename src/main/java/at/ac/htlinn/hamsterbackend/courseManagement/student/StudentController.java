@@ -1,5 +1,6 @@
 package at.ac.htlinn.hamsterbackend.courseManagement.student;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class StudentController {
 	@GetMapping
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> getAllStudentsByCourseId(
-			@RequestParam(name = "course_id", required = false) Integer courseId) {
+			@RequestParam(name = "course_id", required = false) Integer courseId, Principal principal) {
 		
 		if (courseId == null) {
 			// get all students
@@ -70,7 +71,7 @@ public class StudentController {
 		if (course == null) return new ResponseEntity<>("Course does not exist!", HttpStatus.NOT_FOUND);
 		
 		// if user is a teacher, they must be teacher of the specified course
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user) && course.getTeacher().getId() != user.getId())
 			return new ResponseEntity<>("You must be this courses teacher to view its students.", HttpStatus.FORBIDDEN);
 		
@@ -95,14 +96,14 @@ public class StudentController {
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> addStudentsToCourse(
 			@RequestParam(name = "course_id", required = true) int courseId,
-			@RequestBody JsonNode node) throws JsonProcessingException {
+			@RequestBody JsonNode node, Principal principal) throws JsonProcessingException {
 		
 		// check if course exists
 		Course course = courseService.getCourseById(courseId);
 		if (course == null) return new ResponseEntity<>("Course does not exist!", HttpStatus.NOT_FOUND);
 		
 		// if user is a teacher, they must be teacher of the specified course
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user) && course.getTeacher().getId() != user.getId())
 			return new ResponseEntity<>("You must be this courses teacher to add a student.", HttpStatus.FORBIDDEN);
 		
@@ -137,14 +138,14 @@ public class StudentController {
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> removeStudentFromCourse(
 			@PathVariable(name = "student_id") int studentId,
-			@RequestParam(name = "course_id", required = true) int courseId) {
+			@RequestParam(name = "course_id", required = true) int courseId, Principal principal) {
 		
 		// check if course exists
 		Course course = courseService.getCourseById(courseId);
 		if (course == null) return new ResponseEntity<>("Course does not exist!", HttpStatus.NOT_FOUND);
 		
 		// if user is a teacher, they must be teacher of the specified course
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user) && course.getTeacher().getId() != user.getId())
 				return new ResponseEntity<>("You must be this courses teacher to remove a student.", HttpStatus.FORBIDDEN);
 		
@@ -163,10 +164,10 @@ public class StudentController {
 	 */
 	@GetMapping("my-view")
 	@PreAuthorize("hasAuthority('USER')")
-	public ResponseEntity<?> getViewForLoggedInStudent() {
-		int userId = userService.getCurrentUser().getId();
+	public ResponseEntity<?> getViewForLoggedInStudent(Principal principal) {
+        User user = userService.findUserByUsername(principal.getName());
 		
-		List<StudentCourseDto> courseViews = studentService.getStudentView(userId);
+		List<StudentCourseDto> courseViews = studentService.getStudentView(user.getId());
 		return ResponseEntity.ok(courseViews);
 	}
 }

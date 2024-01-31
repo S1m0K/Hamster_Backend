@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import at.ac.htlinn.hamsterbackend.security.CustomPasswordEncoder;
@@ -95,30 +93,6 @@ public class UserService {
 		}
 	}
 	
-	public User getCurrentUser() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		String username;
-		if (principal instanceof UserDetails) {
-		  username = ((UserDetails)principal).getUsername();
-		} else {
-		  username = principal.toString();
-		}
-		
-		// check for mock user
-		if (username.equals("user")) {
-			User user = new User();
-			HashSet<Role> roles = new HashSet<Role>();
-			// TODO: check for actual mock user roles instead of setting it to admin
-			roles.add(new Role(1, "ADMIN"));
-			user.setRoles(roles);
-			user.setId(1);
-			return user;
-		}
-		
-		return findUserByUsername(username);
-	}
-	
 	// check if user is privileged (administrator or developer)
 	// 		used to e.g. check whether users can edit a course
 	//		teachers need to have created the course, administrators and developers can always edit it
@@ -130,16 +104,5 @@ public class UserService {
 			}
 		}
 		return privileged;
-	}
-
-	// used to e.g. check whether users can edit a solution
-	//		students need to have created the solution, administrators and developers can always edit it
-	public boolean isUserStudent(User user) {
-		for (Role role : user.getRoles()) {
-			if (role.getRole().equals("USER")) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

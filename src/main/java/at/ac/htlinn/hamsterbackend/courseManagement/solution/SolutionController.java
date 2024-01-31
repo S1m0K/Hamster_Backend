@@ -1,5 +1,6 @@
 package at.ac.htlinn.hamsterbackend.courseManagement.solution;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -56,11 +57,11 @@ public class SolutionController {
 	 */
 	@GetMapping("{solutionId}")
 	@PreAuthorize("hasAuthority('USER')")
-	public ResponseEntity<?> getSolutionById(@PathVariable int solutionId) {
+	public ResponseEntity<?> getSolutionById(@PathVariable int solutionId, Principal principal) {
 		Solution solution = solutionService.getSolutionById(solutionId); 
 		if (solution == null) return new ResponseEntity<>("Solution does not exist!", HttpStatus.NOT_FOUND);
 
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user)) {
 			// if user is not teacher of this course, they must have created the solution
 			if ((user.getId() != solution.getActivity().getCourse().getTeacher().getId())
@@ -83,7 +84,8 @@ public class SolutionController {
 	public ResponseEntity<?> getAllSolutions(
 			@RequestParam(name = "activity_id", required = false) Integer activityId,
 			@RequestParam(name = "student_id", required = false) Integer studentId,
-			@RequestParam(name = "course_id", required = false) Integer courseId) {
+			@RequestParam(name = "course_id", required = false) Integer courseId,
+			Principal principal) {
 		
 		if (activityId != null) {
 			// get all solutions for 1 activity
@@ -92,7 +94,7 @@ public class SolutionController {
 		    if (activity == null) return new ResponseEntity<>("Activity does not exist!", HttpStatus.NOT_FOUND);
 
 			// if user is a teacher, they must be teacher of the specified course
-			User user = userService.getCurrentUser();
+			User user = userService.findUserByUsername(principal.getName());
 			if (!userService.isUserPrivileged(user) && activity.getCourse().getTeacher().getId() != user.getId())
 				return new ResponseEntity<>("You must be this courses teacher to view its solutions.", HttpStatus.FORBIDDEN);
 			
@@ -115,7 +117,7 @@ public class SolutionController {
 				return new ResponseEntity<>("Student does not exist or is not in course!", HttpStatus.BAD_REQUEST);
 			
 			// if user is a teacher, they must be teacher of the specified course
-			User user = userService.getCurrentUser();
+			User user = userService.findUserByUsername(principal.getName());
 			if (!userService.isUserPrivileged(user) && course.getTeacher().getId() != user.getId())
 				return new ResponseEntity<>("You must be this courses teacher to view its solutions.", HttpStatus.FORBIDDEN);
 			
@@ -135,12 +137,12 @@ public class SolutionController {
 	 */
 	@PutMapping
 	@PreAuthorize("hasAuthority('USER')")
-	public ResponseEntity<?> addSolutionToActivity(@RequestBody JsonNode node) {
+	public ResponseEntity<?> addSolutionToActivity(@RequestBody JsonNode node, Principal principal) {
 		SolutionDto solutionDto = mapper.convertValue(node.get("solution"), SolutionDto.class);
 		if (solutionDto == null) return new ResponseEntity<>("Request body is invalid!", HttpStatus.BAD_REQUEST);
 		
 		// build solution from solutionDto
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		solutionDto.setStudentId(user.getId());
 		// set submissionDate to current Date
 		solutionDto.setSubmissionDate(new Date());
@@ -197,13 +199,13 @@ public class SolutionController {
 	 */
 	@PatchMapping("{solutionId}/feedback")
 	@PreAuthorize("hasAuthority('TEACHER')")
-	public ResponseEntity<?> feedbackSolution(@PathVariable int solutionId, @RequestBody JsonNode node) {
+	public ResponseEntity<?> feedbackSolution(@PathVariable int solutionId, @RequestBody JsonNode node, Principal principal) {
 		Solution solution = solutionService.getSolutionById(solutionId);
 		if (solution == null) new ResponseEntity<>("Solution does not exist!", HttpStatus.NOT_FOUND);
 		if (!solution.isSubmitted()) new ResponseEntity<>("Solution was not submitted!", HttpStatus.BAD_REQUEST);
 		
 		// if user is a teacher, they must be teacher of the specified course
-		User user = userService.getCurrentUser();
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user) && solution.getActivity().getCourse().getTeacher().getId() != user.getId())
 			return new ResponseEntity<>("You must be this courses teacher to give feedback!", HttpStatus.FORBIDDEN);
 		
@@ -225,11 +227,11 @@ public class SolutionController {
 	 */
 	@DeleteMapping("{solutionId}")
 	@PreAuthorize("hasAuthority('USER')")
-	public ResponseEntity<?> deleteSolution(@PathVariable int solutionId) {
+	public ResponseEntity<?> deleteSolution(@PathVariable int solutionId, Principal principal) {
 		Solution solution = solutionService.getSolutionById(solutionId);
 		if (solution == null) new ResponseEntity<>("Solution does not exist!", HttpStatus.NOT_FOUND);
-		
-		User user = userService.getCurrentUser();
+
+		User user = userService.findUserByUsername(principal.getName());
 		if (!userService.isUserPrivileged(user)) {
 			// check if solution has already been given feedback
 			if (solution.getFeedback() != null)

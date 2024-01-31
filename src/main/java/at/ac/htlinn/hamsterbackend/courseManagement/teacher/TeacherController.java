@@ -1,5 +1,6 @@
 package at.ac.htlinn.hamsterbackend.courseManagement.teacher;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +56,9 @@ public class TeacherController {
 	@GetMapping("my-view")
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> getViewForLoggedInTeacher(
-			@RequestParam(name = "course_id", required = false) Integer courseId) {
-		
-		User user = userService.getCurrentUser();
+			@RequestParam(name = "course_id", required = false) Integer courseId, Principal principal) {
+
+		User user = userService.findUserByUsername(principal.getName());
 		
 		if (courseId != null) {
 			// return info for one course
