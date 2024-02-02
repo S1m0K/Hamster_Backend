@@ -66,13 +66,13 @@ public class RunServiceTest {
                 .build();
 
         Field field1 = Field.builder()
-                .field_id(123)
+                .field_id(123L)
                 .wall(true)
                 .xCord(1)
                 .yCord(1)
                 .build();
         Field field2 = Field.builder()
-                .field_id(124)
+                .field_id(124L)
                 .cntCorn(5)
                 .xCord(2)
                 .yCord(2)

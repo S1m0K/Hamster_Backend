@@ -28,7 +28,19 @@ public class TerrainObjectController {
     public ResponseEntity<?> saveTerrainObject(@RequestBody @Valid TerrainObject terrainObject, Principal principal) {
         User user = userService.findUserByUsername(principal.getName());
         terrainObject.setUserId(user.getId());
-        TerrainObject savedTerrainObject = terrainObjectService.save(terrainObject);
+        terrainObject.getDefaultHamster().setTerrainObject(terrainObject);
+        Set<Field> fields = new HashSet<>();
+        terrainObject.getCustomFields().forEach(f -> {
+                    Field field = new Field();
+                    field.setWall(f.isWall());
+                    field.setCntCorn(f.getCntCorn());
+                    field.setYCord(f.getYCord());
+                    field.setXCord(f.getXCord());
+                    field.setTerrainObject(terrainObject);
+                    fields.add(field);
+                });
+
+                TerrainObject savedTerrainObject = terrainObjectService.save(terrainObject);
         return ResponseEntity.ok(savedTerrainObject);
     }
 

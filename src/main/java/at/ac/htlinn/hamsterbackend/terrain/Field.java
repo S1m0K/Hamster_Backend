@@ -16,11 +16,11 @@ public class Field {
     @Column(name = "ID")
     @SequenceGenerator(name = "field_seq", sequenceName = "FIELD_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "field_seq")
-    private Integer field_id;
+    private Long field_id;
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "TERRAIN_ID")
+    @JoinColumn(name = "TERRAIN_ID", nullable = false)
     private TerrainObject terrainObject;
 
     @Column(name = "X_CORD")
