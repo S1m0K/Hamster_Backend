@@ -69,9 +69,9 @@ public class CourseController {
 	@GetMapping
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> getCourseByCourseName(
-			@RequestParam(name = "course_name", required = false) String course_name) {
+			@RequestParam(name = "name", required = false) String courseName) {
 		
-		if(course_name == null) {
+		if(courseName == null) {
 			// get all courses and convert to DTOs
 			List<CourseDto> courses = new ArrayList<CourseDto>();
 			for(Course course : courseService.getAllCourses()) {
@@ -81,7 +81,7 @@ public class CourseController {
 		}
 		
 		// get one course by name
-		Course course = courseService.getCourseByName(course_name); 
+		Course course = courseService.getCourseByName(courseName); 
 		if(course == null) return new ResponseEntity<>("There is no course with this name!", HttpStatus.NOT_FOUND);
 
 		return ResponseEntity.ok(new CourseDto(course));

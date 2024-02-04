@@ -11,16 +11,63 @@
 
 == Courses
 
-=== Get all courses
-
-This `Get` request returns a list of all courses.
+=== Get course by ID
+`Get` request for getting the course with the specified ID.
 
 ==== Request
-
-.request
-include::{snippets}/getCourses/http-request.adoc[]
-
+include::{snippets}/getCourse/http-request.adoc[]
 ==== Response
+include::{snippets}/getCourse/http-response.adoc[]
 
-.response
+
+=== Get course by Name
+`Get` request for getting the course with the specified name.
+
+==== Request
+include::{snippets}/getCourseByName/http-request.adoc[]
+==== Response
+include::{snippets}/getCourseByName/http-response.adoc[]
+
+
+=== Get all courses
+`Get` request for getting a list of all courses.
+
+==== Request
+include::{snippets}/getCourses/http-request.adoc[]
+==== Response
 include::{snippets}/getCourses/http-response.adoc[]
+
+
+=== Create course
+`Post` request for creating a new course.
+Returns the ID of the created course.
+
+==== Request
+include::{snippets}/createCourse/http-request.adoc[]
+==== Response
+include::{snippets}/createCourse/http-response.adoc[]
+
+
+=== Update course
+`Patch` request for updating specific fields in a course.
+Returns the ID of the updated course.
+
+==== Request
+include::{snippets}/updateCourse/http-request.adoc[]
+==== Response
+include::{snippets}/updateCourse/http-response.adoc[]
+
+
+=== Delete course
+`Delete` request for deleting a course.
+
+==== Request
+include::{snippets}/deleteCourse/http-request.adoc[]
+==== Response
+include::{snippets}/deleteCourse/http-response.adoc[]
+
+
+
+== Activities
+
+=== Get Activity by ID

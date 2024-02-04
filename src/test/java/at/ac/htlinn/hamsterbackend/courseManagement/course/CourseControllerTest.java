@@ -3,13 +3,19 @@ package at.ac.htlinn.hamsterbackend.courseManagement.course;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.security.Principal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +27,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import at.ac.htlinn.hamsterbackend.courseManagement.course.dto.CourseDto;
 import at.ac.htlinn.hamsterbackend.courseManagement.course.model.Course;
 import at.ac.htlinn.hamsterbackend.courseManagement.student.StudentService;
 import at.ac.htlinn.hamsterbackend.security.CustomPasswordEncoder;
@@ -35,6 +46,8 @@ public class CourseControllerTest {
 	
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private CourseService courseService;
@@ -43,26 +56,65 @@ public class CourseControllerTest {
     @MockBean
 	private UserService userService;
     
-    // TODO: test doesn't launch without these?
     @MockBean
     private CustomPasswordEncoder customPasswordEncoder;
     @MockBean
     private MyUserDetailsService myUserDetailsService;
     
-	private final User teacher = User.builder()
+    @MockBean
+    private Principal principal;
+    
+	private final User user = User.builder()
 			.id(1)
 			.build();
 	
 	private final Course course = Course.builder()
 			.id(1)
-			.name("hans")
-			.teacher(teacher)
+			.name("Hamster")
+			.teacher(user)
 			.build();
+	
+	private final Course updatedCourse = Course.builder()
+			.id(1)
+			.name("HamsterUpdated")
+			.teacher(user)
+			.build();
+	
+	@BeforeEach
+	public void Setup() {
+		when(userService.findUserByID(1)).thenReturn(user);
+		when(userService.findUserByUsername("admin")).thenReturn(user);
+	}
+
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    public void getCourseById() throws Exception {
+        when(courseService.getCourseById(1)).thenReturn(course);
+
+        mockMvc.perform(get("/courses/" + course.getId())
+          .contentType(MediaType.APPLICATION_JSON)
+          .secure(true))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.name", is(course.getName())))
+		  .andDo(document("getCourse"));
+    }
+
+    @Test
+    @WithMockUser(authorities = "ADMIN")
+    public void getCourseByName() throws Exception {
+        when(courseService.getCourseByName(course.getName())).thenReturn(course);
+
+        mockMvc.perform(get("/courses?name=" + course.getName())
+          .contentType(MediaType.APPLICATION_JSON)
+          .secure(true))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.name", is(course.getName())))
+          .andDo(document("getCourseByName"));
+    }
     
     @Test
     @WithMockUser(authorities = "ADMIN")
-    public void givenCourses_whenGetCourses_thenReturnJsonArray() throws Exception {
-
+    public void getAllCourses() throws Exception {
         List<Course> allCourses = Arrays.asList(course);
 
         when(courseService.getAllCourses()).thenReturn(allCourses);
@@ -74,5 +126,61 @@ public class CourseControllerTest {
           .andExpect(jsonPath("$", hasSize(1)))
           .andExpect(jsonPath("$[0].name", is(course.getName())))
           .andDo(document("getCourses"));
+    }
+    
+    @Test
+    @WithMockUser(username = "admin", authorities = "ADMIN")
+    public void createCourse() throws Exception {
+		when(courseService.saveCourse(course)).thenReturn(course);
+    	
+		JsonNode node = objectMapper.valueToTree(new CourseDto(course));
+		ObjectNode objectNode = objectMapper.createObjectNode();
+		objectNode.set("course", node);
+		String requestBody = objectMapper.writeValueAsString(objectNode);
+
+        mockMvc.perform(post("/courses")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(requestBody)
+          .principal(principal)
+          .secure(true))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$", is(1)))
+          .andDo(document("createCourse"));
+    }
+    
+    @Test
+    @WithMockUser(username = "admin", authorities = "ADMIN")
+    public void updateCourse() throws Exception {
+    	HashMap<String, Object> fields = new HashMap<String, Object>();
+    	fields.put("name", updatedCourse.getName());
+    	
+    	when(courseService.getCourseById(course.getId())).thenReturn(course);
+    	when(courseService.updateCourse(course, fields)).thenReturn(updatedCourse);
+    	
+		String requestBody = objectMapper.writeValueAsString(fields);
+
+        mockMvc.perform(patch("/courses/" + course.getId())
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(requestBody)
+          .principal(principal)
+          .secure(true))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$", is(1)))
+          .andDo(document("updateCourse"));
+    }
+    
+    @Test
+    @WithMockUser(username = "admin", authorities = "ADMIN")
+    public void deleteCourse() throws Exception {
+    	when(courseService.getCourseById(course.getId())).thenReturn(course);
+		when(studentService.removeAllStudentsFromCourse(course.getId())).thenReturn(true);
+    	when(courseService.deleteCourse(course)).thenReturn(true);
+
+        mockMvc.perform(delete("/courses/" + course.getId())
+          .contentType(MediaType.APPLICATION_JSON)
+          .principal(principal)
+          .secure(true))
+          .andExpect(status().isNoContent())
+          .andDo(document("deleteCourse"));
     }
 }
