@@ -16,8 +16,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import at.ac.htlinn.hamsterbackend.role.model.Role;
 import at.ac.htlinn.hamsterbackend.user.UserService;
 import at.ac.htlinn.hamsterbackend.user.model.User;
+
+import java.security.Principal;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +43,8 @@ public class AuthController {
 		} catch (BadCredentialsException e) {
 			throw new Exception("Invalid credentials");
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+		user = userService.findUserByUsername(user.getUsername());
+		return ResponseEntity.ok(user.getRoles());
 	}
 	
 	// TODO: is checking data with constraints working?
@@ -71,5 +76,4 @@ public class AuthController {
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-
 }
