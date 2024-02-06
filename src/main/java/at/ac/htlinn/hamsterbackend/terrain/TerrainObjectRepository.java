@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -20,7 +21,7 @@ public interface TerrainObjectRepository extends JpaRepository<TerrainObject, Lo
     @Modifying
     @Query("update TerrainObject t set t.customFields = :custom_fields , t.defaultHamster = :default_hamster, t.height=:height, t.width = :width where t.terrainId = :terrain_id ")
     boolean update(@Param("terrain_id") long terrainId,
-                   @Param("custom_fields") Set<Field> customFields,
+                   @Param("custom_fields") List<Field> customFields,
                    @Param("default_hamster") HamsterObject defaultHamster,
                    @Param("height") int height,
                    @Param("width") int width
