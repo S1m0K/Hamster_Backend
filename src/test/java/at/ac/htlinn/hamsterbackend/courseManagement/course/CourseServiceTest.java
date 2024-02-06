@@ -39,19 +39,16 @@ public class CourseServiceTest {
     @Test
     public void getCourseByIdTest() {
     	when(courseRepository.getById(course.getId())).thenReturn(course);
-    	
     	Course found = courseService.getCourseById(course.getId());
-    	
     	assertEquals(found.getName(), course.getName());
     }
     
     @Test
     public void getAllCoursesTest() {
         List<Course> courses = Arrays.asList(course);
+        
         when(courseRepository.findAll()).thenReturn(courses);
-        
         List<Course> found = courseService.getAllCourses();
-        
         assertEquals(found.size(), 1);
         assertEquals(found.get(0).getName(), course.getName());
     }
@@ -59,19 +56,16 @@ public class CourseServiceTest {
     @Test
     public void getCourseByNameTest() {
     	when(courseRepository.getByName(course.getName())).thenReturn(course);
-    	
-    	Course found = courseService.getCourseByName(course.getName());
-    			
+    	Course found = courseService.getCourseByName(course.getName());	
     	assertEquals(found.getName(), course.getName());
     }
     
     @Test
     public void getCoursesByStudentIdTest() {
         List<Course> courses = Arrays.asList(course);
+        
     	when(courseRepository.getCoursesByStudentId(1)).thenReturn(courses);
-    	
     	List<Course> found = courseService.getCoursesByStudentId(1);
-
         assertEquals(found.size(), 1);
         assertEquals(found.get(0).getName(), course.getName());
     }
@@ -79,10 +73,9 @@ public class CourseServiceTest {
     @Test
     public void getCoursesByTeacherIdTest() {
         List<Course> courses = Arrays.asList(course);
+        
     	when(courseRepository.getCoursesByTeacherId(1)).thenReturn(courses);
-    	
     	List<Course> found = courseService.getCoursesByTeacherId(1);
-
         assertEquals(found.size(), 1);
         assertEquals(found.get(0).getName(), course.getName());
     }
@@ -95,18 +88,14 @@ public class CourseServiceTest {
     			.build();
     	
     	when(courseRepository.getByActivityId(solution.getId())).thenReturn(course);
-    	
-    	Course found = courseService.getCourseBySolution(solution);
-    			
+    	Course found = courseService.getCourseBySolution(solution);	
     	assertEquals(found.getName(), course.getName());
     }
     
     @Test
     public void saveCourseTest() {
     	when(courseRepository.save(course)).thenReturn(course);
-    	
-    	Course saved = courseService.saveCourse(course);
-    			
+    	Course saved = courseService.saveCourse(course);		
     	assertEquals(saved.getName(), course.getName());
     }
     
@@ -122,16 +111,13 @@ public class CourseServiceTest {
     	fields.put("name", updatedCourse.getName());
     	
     	when(courseRepository.save(course)).thenReturn(course);
-    	
-		Course updated = courseService.updateCourse(course, fields);
-    			
+		Course updated = courseService.updateCourse(course, fields);	
     	assertEquals(updated.getName(), updatedCourse.getName());
     }
     
     @Test
     public void deleteCourseTest() {
     	boolean success = courseService.deleteCourse(course);
-    	
     	assertTrue(success);
     }
 }

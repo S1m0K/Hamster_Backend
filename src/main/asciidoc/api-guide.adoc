@@ -68,6 +68,51 @@ include::{snippets}/deleteCourse/http-response.adoc[]
 
 
 
+
 == Activities
 
-=== Get Activity by ID
+=== Get activity by ID
+`Get` request for getting the activity with the specified ID.
+
+==== Request
+include::{snippets}/getActivity/http-request.adoc[]
+==== Response
+include::{snippets}/getActivity/http-response.adoc[]
+
+
+=== Get activities by course ID
+`Get` request for getting all activities in the specified course.
+
+==== Request
+include::{snippets}/getActivitiesByCourse/http-request.adoc[]
+==== Response
+include::{snippets}/getActivitiesByCourse/http-response.adoc[]
+
+
+=== Create activity
+`Post` request for creating a new activity.
+Returns the ID of the created activity.
+
+==== Request
+include::{snippets}/createActivity/http-request.adoc[]
+==== Response
+include::{snippets}/createActivity/http-response.adoc[]
+
+
+=== Update activity
+`Patch` request for updating specific fields in a activity.
+Returns the ID of the updated activity.
+
+==== Request
+include::{snippets}/updateActivity/http-request.adoc[]
+==== Response
+include::{snippets}/updateActivity/http-response.adoc[]
+
+
+=== Delete activity
+`Delete` request for deleting a activity.
+
+==== Request
+include::{snippets}/deleteActivity/http-request.adoc[]
+==== Response
+include::{snippets}/deleteActivity/http-response.adoc[]
