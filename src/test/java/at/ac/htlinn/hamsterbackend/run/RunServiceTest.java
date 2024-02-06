@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -78,7 +80,7 @@ public class RunServiceTest {
                 .yCord(2)
                 .build();
 
-        Set<Field> fields = new HashSet<>();
+        List<Field> fields = new ArrayList<>();
         fields.add(field1);
         fields.add(field2);
 

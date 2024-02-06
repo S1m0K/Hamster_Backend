@@ -179,7 +179,7 @@ public class Workbench {
         }
     }
 
-    public Terrain createHamsterTerrain(Set<Field> customFields, int height, int width, HamsterObject hamster) {
+    public Terrain createHamsterTerrain(List<Field> customFields, int height, int width, HamsterObject hamster) {
         Terrain terrain = new Terrain(width, height);
         customFields.forEach(field -> {
             terrain.setWall(field.getXCord(), field.getYCord(), field.isWall());
