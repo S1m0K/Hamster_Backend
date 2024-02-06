@@ -74,12 +74,6 @@ public class CourseControllerTest {
 			.teacher(user)
 			.build();
 	
-	private final Course updatedCourse = Course.builder()
-			.id(1)
-			.name("HamsterUpdated")
-			.teacher(user)
-			.build();
-	
 	@BeforeEach
 	public void Setup() {
 		when(userService.findUserByID(1)).thenReturn(user);
@@ -88,7 +82,7 @@ public class CourseControllerTest {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    public void getCourseById() throws Exception {
+    public void getCourseByIdTest() throws Exception {
         when(courseService.getCourseById(1)).thenReturn(course);
 
         mockMvc.perform(get("/courses/" + course.getId())
@@ -101,7 +95,7 @@ public class CourseControllerTest {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    public void getCourseByName() throws Exception {
+    public void getCourseByNameTest() throws Exception {
         when(courseService.getCourseByName(course.getName())).thenReturn(course);
 
         mockMvc.perform(get("/courses?name=" + course.getName())
@@ -114,9 +108,8 @@ public class CourseControllerTest {
     
     @Test
     @WithMockUser(authorities = "ADMIN")
-    public void getAllCourses() throws Exception {
+    public void getAllCoursesTest() throws Exception {
         List<Course> allCourses = Arrays.asList(course);
-
         when(courseService.getAllCourses()).thenReturn(allCourses);
 
         mockMvc.perform(get("/courses")
@@ -130,7 +123,7 @@ public class CourseControllerTest {
     
     @Test
     @WithMockUser(username = "admin", authorities = "ADMIN")
-    public void createCourse() throws Exception {
+    public void createCourseTest() throws Exception {
 		when(courseService.saveCourse(course)).thenReturn(course);
     	
 		JsonNode node = objectMapper.valueToTree(new CourseDto(course));
@@ -150,7 +143,13 @@ public class CourseControllerTest {
     
     @Test
     @WithMockUser(username = "admin", authorities = "ADMIN")
-    public void updateCourse() throws Exception {
+    public void updateCourseTest() throws Exception {
+    	Course updatedCourse = Course.builder()
+    			.id(1)
+    			.name("HamsterUpdated")
+    			.teacher(user)
+    			.build();
+    	
     	HashMap<String, Object> fields = new HashMap<String, Object>();
     	fields.put("name", updatedCourse.getName());
     	
@@ -171,7 +170,7 @@ public class CourseControllerTest {
     
     @Test
     @WithMockUser(username = "admin", authorities = "ADMIN")
-    public void deleteCourse() throws Exception {
+    public void deleteCourseTest() throws Exception {
     	when(courseService.getCourseById(course.getId())).thenReturn(course);
 		when(studentService.removeAllStudentsFromCourse(course.getId())).thenReturn(true);
     	when(courseService.deleteCourse(course)).thenReturn(true);

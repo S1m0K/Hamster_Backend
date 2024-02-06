@@ -5,10 +5,14 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import at.ac.htlinn.hamsterbackend.courseManagement.solution.model.Solution;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class SolutionDto {
 	public SolutionDto(Solution solution) {
