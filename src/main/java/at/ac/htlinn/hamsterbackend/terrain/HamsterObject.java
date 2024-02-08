@@ -17,8 +17,6 @@ public class HamsterObject {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @SequenceGenerator(name = "hamster_seq", sequenceName = "HAMSTER_SEQ", allocationSize = 1)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hamster_seq")
     private long hamster_id;
 
     @OneToOne(cascade = CascadeType.ALL)

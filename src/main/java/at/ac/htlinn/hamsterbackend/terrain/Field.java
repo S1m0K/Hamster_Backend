@@ -17,8 +17,6 @@ public class Field {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @SequenceGenerator(name = "field_seq", sequenceName = "FIELD_SEQ", allocationSize = 1)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "field_seq")
     private Long field_id;
 
     @JsonIgnore

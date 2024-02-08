@@ -26,4 +26,8 @@ public class DirectoryManagement {
 
         return f.renameTo(movedFile);
     }
+
+    public static boolean createFile(File f){
+        return false;
+    }
 }

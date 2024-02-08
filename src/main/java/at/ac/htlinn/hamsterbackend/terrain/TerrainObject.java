@@ -19,8 +19,6 @@ import java.util.Set;
 @Table(name = "TERRAIN")
 public class TerrainObject {
     @Id
-//    @SequenceGenerator(name = "terrain_seq", sequenceName = "TERRAIN_SEQ", allocationSize = 1)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "terrain_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private long terrainId;
