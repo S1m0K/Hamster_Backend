@@ -128,10 +128,10 @@ public class CourseController {
 					: new ResponseEntity<>("Could not update course!", HttpStatus.INTERNAL_SERVER_ERROR);
 			
 		} catch (NoSuchFieldException e) {
-			return new ResponseEntity<>(String.format("Field %s is invalid!", e.getMessage()),
+			return new ResponseEntity<>(String.format("Field '%s' is invalid!", e.getMessage()),
 					HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			return new ResponseEntity<>(String.format("Field %s could not be changed!", e.getMessage()),
+			return new ResponseEntity<>(String.format("Field '%s' could not be changed!", e.getMessage()),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

@@ -110,11 +110,9 @@ public class SolutionController {
 			if (courseId == null)
 				return new ResponseEntity<>("Request is missing course id", HttpStatus.BAD_REQUEST);
 			
-			// check if course exists and student is in course
+			// check if course exists
 			Course course = courseService.getCourseById(courseId);
 			if (course == null) return new ResponseEntity<>("Course does not exist!", HttpStatus.NOT_FOUND);
-			if (!studentService.isUserStudent(studentId, courseId))
-				return new ResponseEntity<>("Student does not exist or is not in course!", HttpStatus.BAD_REQUEST);
 			
 			// if user is a teacher, they must be teacher of the specified course
 			User user = userService.findUserByUsername(principal.getName());
@@ -186,7 +184,8 @@ public class SolutionController {
 				return new ResponseEntity<>("Solution already exists!", HttpStatus.BAD_REQUEST);
 		}
 		
-		return solutionService.saveSolution(solution) != null ? ResponseEntity.ok(new SolutionDto(solution))
+		solution = solutionService.saveSolution(solution);
+		return solution != null ? ResponseEntity.ok(new SolutionDto(solution))
 				: new ResponseEntity<>("Could not put solution!", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	

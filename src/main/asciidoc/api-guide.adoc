@@ -107,3 +107,73 @@ include::{snippets}/updateActivity/http-response.adoc[]
 include::{snippets}/deleteActivity/http-request.adoc[]
 ==== Response
 include::{snippets}/deleteActivity/http-response.adoc[]
+
+
+
+
+== Solutions
+
+=== Get solution by ID
+`Get` request for getting the solution with the specified ID.
+
+==== Request
+include::{snippets}/getSolution/http-request.adoc[]
+==== Response
+include::{snippets}/getSolution/http-response.adoc[]
+
+
+=== Get solutions by activity ID
+`Get` request for getting all solutions for the specified activity.
+
+==== Request
+include::{snippets}/getSolutionsByActivity/http-request.adoc[]
+==== Response
+include::{snippets}/getSolutionsByActivity/http-response.adoc[]
+
+
+=== Get solutions by student ID
+`Get` request for getting all solutions by the specified student in the specified course.
+
+==== Request
+include::{snippets}/getSolutionsByStudent/http-request.adoc[]
+==== Response
+include::{snippets}/getSolutionsByStudent/http-response.adoc[]
+
+
+=== Create solution
+`Put` request for creating a new solution.
+Returns the created solution.
+
+==== Request
+include::{snippets}/createSolution/http-request.adoc[]
+==== Response
+include::{snippets}/createSolution/http-response.adoc[]
+
+
+=== Update solution
+`Put` request for creating a solution.
+Returns the updated solution.
+
+==== Request
+include::{snippets}/updateSolution/http-request.adoc[]
+==== Response
+include::{snippets}/updateSolution/http-response.adoc[]
+
+
+=== Feedback solution
+`Delete` request for feedbacking a solution.
+Returns the updated solution.
+
+==== Request
+include::{snippets}/feedbackSolution/http-request.adoc[]
+==== Response
+include::{snippets}/feedbackSolution/http-response.adoc[]
+
+
+=== Delete solution
+`Delete` request for deleting a solution.
+
+==== Request
+include::{snippets}/deleteSolution/http-request.adoc[]
+==== Response
+include::{snippets}/deleteSolution/http-response.adoc[]

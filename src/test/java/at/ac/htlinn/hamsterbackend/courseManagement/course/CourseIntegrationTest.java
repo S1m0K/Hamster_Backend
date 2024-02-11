@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.HashMap;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import at.ac.htlinn.hamsterbackend.courseManagement.course.dto.CourseDto;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/snippets")
 @RunWith(SpringRunner.class)
@@ -39,55 +41,61 @@ public class CourseIntegrationTest {
 	
     @Autowired
     private MockMvc mockMvc;
-	
-	private final CourseDto course1 = CourseDto.builder()
-			.name("Hamster 1")
+    
+    private final CourseDto course = CourseDto.builder()
+			.name("Course")
 			.build();
-	private final CourseDto course2 = CourseDto.builder()
-			.name("Hamster 2")
-			.build();
+    
+    private int courseId;
+    
+    @BeforeEach
+    public void setup() throws Exception {
+		// create course
+		ObjectNode objectNode = objectMapper.createObjectNode();
+		objectNode.set("course", objectMapper.valueToTree(course));
+		String requestBody = objectMapper.writeValueAsString(objectNode);
+		
+		MvcResult result = mockMvc.perform(post("/courses")
+		        .contentType(MediaType.APPLICATION_JSON)
+		        .content(requestBody)
+	            .secure(true))
+		        .andExpect(status().isOk())
+		        .andReturn();
+		courseId = objectMapper.readValue(result.getResponse().getContentAsString(), int.class);
+    }
+    
+    @AfterEach
+    public void teardown() throws Exception {
+        // delete course
+        mockMvc.perform(delete("/courses/" + courseId)
+	            .secure(true))
+				.andExpect(status().isNoContent());
+    }
     
     @Test
     @WithMockUser(username = "admin", password = "admin", authorities = "ADMIN")
     public void test() throws Exception {
-    	ObjectNode objectNode;
-    	String requestBody;
-    	MvcResult result;
-    	
-    	// create course 1
-    	objectNode = objectMapper.createObjectNode();
-		objectNode.set("course", objectMapper.valueToTree(course1));
-		requestBody = objectMapper.writeValueAsString(objectNode);
+		// get course by id
+        mockMvc.perform(get("/courses/" + courseId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.secure(true))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", is(courseId)))
+				.andDo(document("getCourse"));
+        
+    	// create course
+    	ObjectNode objectNode = objectMapper.createObjectNode();
+		objectNode.set("course", objectMapper.valueToTree(course));
+		String requestBody = objectMapper.writeValueAsString(objectNode);	
 		
-        result = mockMvc.perform(post("/courses")
+		MvcResult result = mockMvc.perform(post("/courses")
 		        .contentType(MediaType.APPLICATION_JSON)
 		        .content(requestBody)
 	            .secure(true))
 		        .andExpect(status().isOk())
 		        .andDo(document("createCourse"))
 		        .andReturn();
-		int id1 = objectMapper.readValue(result.getResponse().getContentAsString(), int.class);
-		
-		// create course 2
-		objectNode = objectMapper.createObjectNode();
-		objectNode.set("course", objectMapper.valueToTree(course2));
-		requestBody = objectMapper.writeValueAsString(objectNode);
-		
-		result = mockMvc.perform(post("/courses")
-		        .contentType(MediaType.APPLICATION_JSON)
-		        .content(requestBody)
-	            .secure(true))
-		        .andExpect(status().isOk())
-		        .andReturn();
-		int id2 = objectMapper.readValue(result.getResponse().getContentAsString(), int.class);
-		
-		// get course by id
-        mockMvc.perform(get("/courses/" + id1)
-				.contentType(MediaType.APPLICATION_JSON)
-				.secure(true))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.name", is(course1.getName())))
-				.andDo(document("getCourse"));
+		int id = objectMapper.readValue(result.getResponse().getContentAsString(), int.class);
         
         // get all courses
         mockMvc.perform(get("/courses")
@@ -102,28 +110,23 @@ public class CourseIntegrationTest {
     	fields.put("name", updatedName);
 		requestBody = objectMapper.writeValueAsString(fields);
 
-        mockMvc.perform(patch("/courses/" + id1)
+        mockMvc.perform(patch("/courses/" + id)
 		        .contentType(MediaType.APPLICATION_JSON)
 		        .content(requestBody)
 		        .secure(true))
 		        .andExpect(status().isOk())
-		        .andExpect(jsonPath("$", is(id1)))
+		        .andExpect(jsonPath("$", is(id)))
 		        .andDo(document("updateCourse"));
         // check if course was updated
-        mockMvc.perform(get("/courses?name=" + updatedName)
+        mockMvc.perform(get("/courses/" + id)
 				.contentType(MediaType.APPLICATION_JSON)
 				.secure(true))
-				.andExpect(status().isOk());
+        		.andExpect(jsonPath("$.name", is(updatedName)));
         
-        // delete course 1
-        mockMvc.perform(delete("/courses/" + id1)
+        // delete course
+        mockMvc.perform(delete("/courses/" + id)
 	            .secure(true))
 				.andExpect(status().isNoContent())
 		        .andDo(document("deleteCourse"));
-        
-        // delete course 2
-        mockMvc.perform(delete("/courses/" + id2)
-	            .secure(true))
-				.andExpect(status().isNoContent());
     }
 }

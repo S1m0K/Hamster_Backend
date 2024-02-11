@@ -34,6 +34,7 @@ public class ActivityService {
 	public Activity updateActivity(Activity activity, Map<String, Object> fields) throws NoSuchFieldException, Exception {
 		// attempt to update all specified fields
 		// TODO: key currently needs to match actual field names instead of JSON field names
+		// TODO: HIGH PRIORITY: only exercise and contest fields can be changed, not activity fields
 		for (Map.Entry<String, Object> set : fields.entrySet()) {
 			try {
 				Field field = activity instanceof Exercise ?

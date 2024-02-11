@@ -32,7 +32,7 @@ public class CourseServiceTest {
 	
 	private final Course course = Course.builder()
 			.id(1)
-			.name("Hamster")
+			.name("Course")
 			.teacher(user)
 			.build();
     
@@ -96,7 +96,7 @@ public class CourseServiceTest {
     public void updateCourseTest() throws NoSuchFieldException, Exception {
     	Course updatedCourse = Course.builder()
     			.id(1)
-    			.name("HamsterUpdated")
+    			.name("updated name")
     			.teacher(user)
     			.build();
     	

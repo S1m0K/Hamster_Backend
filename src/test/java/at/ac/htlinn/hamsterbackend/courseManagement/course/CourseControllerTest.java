@@ -66,7 +66,7 @@ public class CourseControllerTest {
 	
 	private final Course course = Course.builder()
 			.id(1)
-			.name("Hamster")
+			.name("Course")
 			.teacher(user)
 			.build();
 	
@@ -125,7 +125,7 @@ public class CourseControllerTest {
     public void updateCourseTest() throws Exception {
     	Course updatedCourse = Course.builder()
     			.id(1)
-    			.name("HamsterUpdated")
+    			.name("updated name")
     			.teacher(user)
     			.build();
     	
