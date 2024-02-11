@@ -35,10 +35,6 @@ public class CourseService {
 			return null;
 		}
 	}
-
-	public Course getCourseByName(String name) {
-		return courseRepository.getByName(name);
-	}
 	
 	public List<Course> getCoursesByStudentId(int studentId) {
 		return courseRepository.getCoursesByStudentId(studentId);

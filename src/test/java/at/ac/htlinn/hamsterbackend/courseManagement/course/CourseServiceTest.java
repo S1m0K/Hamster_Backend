@@ -54,13 +54,6 @@ public class CourseServiceTest {
     }
     
     @Test
-    public void getCourseByNameTest() {
-    	when(courseRepository.getByName(course.getName())).thenReturn(course);
-    	Course found = courseService.getCourseByName(course.getName());	
-    	assertEquals(found.getName(), course.getName());
-    }
-    
-    @Test
     public void getCoursesByStudentIdTest() {
         List<Course> courses = Arrays.asList(course);
         

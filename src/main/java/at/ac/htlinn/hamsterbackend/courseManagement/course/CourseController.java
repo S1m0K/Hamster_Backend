@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -60,31 +59,20 @@ public class CourseController {
 	}
 	
 	/**
-	 * GET all courses or one course by course name
-	 * optional @RequestParam course_name
+	 * GET all courses
 	 * 
 	 * @param json
 	 * @return
 	 */
 	@GetMapping
 	@PreAuthorize("hasAuthority('USER')")
-	public ResponseEntity<?> getCourseByCourseName(
-			@RequestParam(name = "name", required = false) String courseName) {
-		
-		if(courseName == null) {
-			// get all courses and convert to DTOs
-			List<CourseDto> courses = new ArrayList<CourseDto>();
-			for(Course course : courseService.getAllCourses()) {
-				courses.add(new CourseDto(course));
-			}
-			return ResponseEntity.ok(courses);
+	public ResponseEntity<?> getAllCourses() {
+		// get all courses and convert to DTOs
+		List<CourseDto> courses = new ArrayList<CourseDto>();
+		for(Course course : courseService.getAllCourses()) {
+			courses.add(new CourseDto(course));
 		}
-		
-		// get one course by name
-		Course course = courseService.getCourseByName(courseName); 
-		if(course == null) return new ResponseEntity<>("There is no course with this name!", HttpStatus.NOT_FOUND);
-
-		return ResponseEntity.ok(new CourseDto(course));
+		return ResponseEntity.ok(courses);
 	}
 	
 	/**
@@ -94,7 +82,7 @@ public class CourseController {
 	 * @param json
 	 * @return
 	 */
-	@PostMapping("")
+	@PostMapping
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> createCourse(@RequestBody JsonNode node, Principal principal) {
 		CourseDto courseDto = mapper.convertValue(node.get("course"), CourseDto.class);
@@ -155,7 +143,7 @@ public class CourseController {
 	 * @param json
 	 * @return
 	 */
-	@DeleteMapping("/{courseId}")
+	@DeleteMapping("{courseId}")
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> deleteCourse(@PathVariable int courseId, Principal principal) {
 		

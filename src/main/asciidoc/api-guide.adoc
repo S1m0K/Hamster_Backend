@@ -20,15 +20,6 @@ include::{snippets}/getCourse/http-request.adoc[]
 include::{snippets}/getCourse/http-response.adoc[]
 
 
-=== Get course by Name
-`Get` request for getting the course with the specified name.
-
-==== Request
-include::{snippets}/getCourseByName/http-request.adoc[]
-==== Response
-include::{snippets}/getCourseByName/http-response.adoc[]
-
-
 === Get all courses
 `Get` request for getting a list of all courses.
 
