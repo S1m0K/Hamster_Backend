@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -20,6 +23,9 @@ public class TerrainObjectController {
     TerrainObjectService terrainObjectService;
 
     @Autowired
+    FieldService fieldService;
+
+    @Autowired
     UserService userService;
 
     @PreAuthorize("hasAuthority('USER')")
@@ -27,7 +33,13 @@ public class TerrainObjectController {
     public ResponseEntity<?> saveTerrainObject(@RequestBody @Valid TerrainObject terrainObject, Principal principal) {
         User user = userService.findUserByUsername(principal.getName());
         terrainObject.setUserId(user.getId());
+        terrainObject.getDefaultHamster().setTerrainObject(terrainObject);
+        terrainObject.getCustomFields().forEach(field -> {
+            field.setTerrainObject(terrainObject);
+        });
+
         TerrainObject savedTerrainObject = terrainObjectService.save(terrainObject);
+
         return ResponseEntity.ok(savedTerrainObject);
     }
 

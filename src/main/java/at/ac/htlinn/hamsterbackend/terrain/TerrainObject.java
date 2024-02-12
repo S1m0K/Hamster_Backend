@@ -1,9 +1,12 @@
 package at.ac.htlinn.hamsterbackend.terrain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,11 +19,11 @@ import java.util.Set;
 @Table(name = "TERRAIN")
 public class TerrainObject {
     @Id
-    @SequenceGenerator(name = "terrain_seq", sequenceName = "TERRAIN_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "terrain_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private long terrainId;
 
+    @JsonIgnore
     @Column(name = "USER_ID")
     private long userId;
 
@@ -33,12 +36,11 @@ public class TerrainObject {
     @Column(name = "HEIGHT")
     private int height;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "hamster_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "terrainObject")
     private HamsterObject defaultHamster;
 
-    @OneToMany(targetEntity = Field.class, mappedBy = "terrainObject", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Field> customFields = new HashSet<>();
+    @OneToMany(mappedBy = "terrainObject", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Field> customFields;
 
     @Column(name = "TERRAIN_PATH")
     private String terrainPath;

@@ -3,7 +3,9 @@ package at.ac.htlinn.hamsterbackend.terrain;
 import at.ac.htlinn.hamsterbackend.terrain.TerrainObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+
 import javax.persistence.*;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,9 +16,8 @@ import javax.persistence.*;
 public class Field {
     @Id
     @Column(name = "ID")
-    @SequenceGenerator(name = "field_seq", sequenceName = "FIELD_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "field_seq")
-    private Integer field_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long field_id;
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
@@ -27,7 +28,7 @@ public class Field {
     private int xCord;
 
     @Column(name = "Y_CORD")
-    private int  yCord;
+    private int yCord;
 
     @Column(name = "CNT_CORN")
     private int cntCorn;

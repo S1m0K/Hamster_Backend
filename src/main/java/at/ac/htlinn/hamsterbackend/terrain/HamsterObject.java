@@ -16,18 +16,12 @@ import javax.persistence.*;
 public class HamsterObject {
     @Id
     @Column(name = "ID")
-    @SequenceGenerator(name = "hamster_seq", sequenceName = "HAMSTER_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hamster_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long hamster_id;
 
-//    @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name = "TERRAIN_ID")
-//    private TerrainObject terrainObject;
-
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "TERRAIN_ID")
+    @JoinColumn(name = "TERRAIN_ID", unique = true)
+    @JsonIgnore
     private TerrainObject terrainObject;
 
     @Column(name = "X_CORD")
