@@ -1,25 +1,28 @@
 package at.ac.htlinn.hamsterbackend.hamsterEvaluation.workbench;
 
+import at.ac.htlinn.hamsterbackend.hamsterEvaluation.compiler.controller.CompilerController;
+import at.ac.htlinn.hamsterbackend.hamsterEvaluation.debugger.controller.DebuggerController;
+import at.ac.htlinn.hamsterbackend.hamsterEvaluation.debugger.model.DebuggerModel;
 import at.ac.htlinn.hamsterbackend.hamsterEvaluation.interpreter.Territorium;
 import at.ac.htlinn.hamsterbackend.hamsterEvaluation.lego.controller.LegoController;
 import at.ac.htlinn.hamsterbackend.hamsterEvaluation.model.HamsterFile;
 import at.ac.htlinn.hamsterbackend.hamsterEvaluation.simulation.controller.SimulationController;
 import at.ac.htlinn.hamsterbackend.hamsterEvaluation.simulation.model.SimulationModel;
 import at.ac.htlinn.hamsterbackend.hamsterEvaluation.simulation.model.Terrain;
-import at.ac.htlinn.hamsterbackend.hamsterEvaluation.compiler.controller.CompilerController;
-import at.ac.htlinn.hamsterbackend.hamsterEvaluation.debugger.controller.DebuggerController;
-import at.ac.htlinn.hamsterbackend.hamsterEvaluation.debugger.model.DebuggerModel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import at.ac.htlinn.hamsterbackend.terrain.Field;
 import at.ac.htlinn.hamsterbackend.terrain.HamsterObject;
 import at.ac.htlinn.hamsterbackend.terrain.ViewDirection;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Properties;
+import java.util.Scanner;
+import java.util.TreeMap;
 
 
 /**
@@ -188,7 +191,6 @@ public class Workbench {
         terrain.getDefaultHamster().setDir(ViewDirection.viewDirectionIntegerMap.get(hamster.getViewDirection()));
         terrain.getDefaultHamster().setMouth(hamster.getCntCornInMouth());
         terrain.getDefaultHamster().setXY(hamster.getXCord(), hamster.getYCord());
-        //TODO MAP??? dont know what to do here!
         return terrain;
     }
 

@@ -37,6 +37,9 @@ public class Program implements Comparable {
     @Column(name = "PROGRAM_PATH")
     private String programPath;
 
+    @Column(name = "ARR_ID")
+    private long arrId;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
