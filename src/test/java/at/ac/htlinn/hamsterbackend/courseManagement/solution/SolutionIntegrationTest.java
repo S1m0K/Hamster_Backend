@@ -104,7 +104,6 @@ public class SolutionIntegrationTest {
         		.content(requestBody)
         		.secure(true))
           		.andExpect(status().isOk())
-          		.andDo(document("createSolution"))
           		.andReturn();
 		solutionId = objectMapper.readValue(result.getResponse().getContentAsString(), SolutionDto.class).getId();
 		

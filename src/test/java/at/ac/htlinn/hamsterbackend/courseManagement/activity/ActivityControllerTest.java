@@ -72,15 +72,13 @@ public class ActivityControllerTest {
 	private final User user = User.builder()
 			.id(1)
 			.build();
-	
 	private final Course course = Course.builder()
-			.id(1)
+			.id(2)
 			.name("Hamster")
 			.teacher(user)
 			.build();
-	
 	private final Exercise exercise = Exercise.builder()
-			.id(1)
+			.id(3)
 			.name("HamsterExercise")
 			.course(course)
 			.hamster("abc")
@@ -88,7 +86,7 @@ public class ActivityControllerTest {
 	
 	@BeforeEach
 	public void Setup() {
-		when(userService.findUserByID(1)).thenReturn(user);
+		when(userService.findUserByID(user.getId())).thenReturn(user);
 		when(userService.findUserByUsername("admin")).thenReturn(user);
 		when(userService.isUserPrivileged(user)).thenReturn(true);
 	}
@@ -96,7 +94,7 @@ public class ActivityControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = "ADMIN")
     public void getActivityByIdTest() throws Exception {
-        when(activityService.getActivityById(1)).thenReturn(exercise);
+        when(activityService.getActivityById(exercise.getId())).thenReturn(exercise);
 
         mockMvc.perform(get("/activities/" + exercise.getId())
         		.contentType(MediaType.APPLICATION_JSON)
@@ -136,14 +134,14 @@ public class ActivityControllerTest {
         		.principal(principal)
         		.secure(true))
           		.andExpect(status().isOk())
-          		.andExpect(jsonPath("$", is(1)));
+          		.andExpect(jsonPath("$", is(exercise.getId())));
     }
     
     @Test
     @WithMockUser(username = "admin", authorities = "ADMIN")
     public void updateActivityTest() throws Exception {
     	Exercise updatedExercise = Exercise.builder()
-    			.id(1)
+    			.id(exercise.getId())
     			.name("HamsterExerciseUpdated")
     			.build();
     	
@@ -161,7 +159,7 @@ public class ActivityControllerTest {
         		.principal(principal)
     			.secure(true))
         		.andExpect(status().isOk())
-        		.andExpect(jsonPath("$", is(1)));
+        		.andExpect(jsonPath("$", is(exercise.getId())));
     }
     
     @Test

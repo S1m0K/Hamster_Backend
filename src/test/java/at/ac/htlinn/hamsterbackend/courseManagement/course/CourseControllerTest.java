@@ -63,23 +63,22 @@ public class CourseControllerTest {
 	private final User user = User.builder()
 			.id(1)
 			.build();
-	
 	private final Course course = Course.builder()
-			.id(1)
+			.id(2)
 			.name("Course")
 			.teacher(user)
 			.build();
 	
 	@BeforeEach
 	public void setup() {
-		when(userService.findUserByID(1)).thenReturn(user);
+		when(userService.findUserByID(user.getId())).thenReturn(user);
 		when(userService.findUserByUsername("admin")).thenReturn(user);
 	}
 
     @Test
     @WithMockUser(authorities = "ADMIN")
     public void getCourseByIdTest() throws Exception {
-        when(courseService.getCourseById(1)).thenReturn(course);
+        when(courseService.getCourseById(course.getId())).thenReturn(course);
 
         mockMvc.perform(get("/courses/" + course.getId())
 				.contentType(MediaType.APPLICATION_JSON)
@@ -117,14 +116,14 @@ public class CourseControllerTest {
 		        .principal(principal)
 		        .secure(true))
 		        .andExpect(status().isOk())
-		        .andExpect(jsonPath("$", is(1)));
+		        .andExpect(jsonPath("$", is(course.getId())));
     }
     
     @Test
     @WithMockUser(username = "admin", authorities = "ADMIN")
     public void updateCourseTest() throws Exception {
     	Course updatedCourse = Course.builder()
-    			.id(1)
+    			.id(course.getId())
     			.name("updated name")
     			.teacher(user)
     			.build();
@@ -143,7 +142,7 @@ public class CourseControllerTest {
 		        .principal(principal)
 		        .secure(true))
 		        .andExpect(status().isOk())
-		        .andExpect(jsonPath("$", is(1)));
+		        .andExpect(jsonPath("$", is(course.getId())));
 	}
 
 	@Test

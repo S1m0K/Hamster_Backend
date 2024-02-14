@@ -30,15 +30,13 @@ public class ActivityServiceTest {
 	private final User user = User.builder()
 			.id(1)
 			.build();
-	
 	private final Course course = Course.builder()
-			.id(1)
+			.id(2)
 			.name("Hamster")
 			.teacher(user)
 			.build();
-	
 	private final Exercise exercise = Exercise.builder()
-			.id(1)
+			.id(3)
 			.name("HamsterExercise")
 			.course(course)
 			.build();
@@ -51,14 +49,14 @@ public class ActivityServiceTest {
     }
     
     @Test
-    public void saveExerciseTest() {
+    public void saveActivityTest() {
     	when(activityRepository.save(exercise)).thenReturn(exercise);
     	Exercise saved = (Exercise) activityService.saveActivity(exercise);
     	assertEquals(saved.getName(), exercise.getName());
     }
     
     @Test
-    public void updateExerciseTest() throws NoSuchFieldException, Exception {
+    public void updateActivityTest() throws NoSuchFieldException, Exception {
     	Exercise updatedExercise = Exercise.builder()
     			.hamster("Hamster")
     			.build();
@@ -72,7 +70,7 @@ public class ActivityServiceTest {
     }
     
     @Test
-    public void deleteCourseTest() {
+    public void deleteActivityTest() {
     	boolean success = activityService.deleteActivity(exercise.getId());
     	assertTrue(success);
     }

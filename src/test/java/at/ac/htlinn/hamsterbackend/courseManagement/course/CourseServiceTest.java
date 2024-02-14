@@ -29,9 +29,8 @@ public class CourseServiceTest {
 	private final User user = User.builder()
 			.id(1)
 			.build();
-	
 	private final Course course = Course.builder()
-			.id(1)
+			.id(2)
 			.name("Course")
 			.teacher(user)
 			.build();
@@ -57,8 +56,8 @@ public class CourseServiceTest {
     public void getCoursesByStudentIdTest() {
         List<Course> courses = Arrays.asList(course);
         
-    	when(courseRepository.getCoursesByStudentId(1)).thenReturn(courses);
-    	List<Course> found = courseService.getCoursesByStudentId(1);
+    	when(courseRepository.getCoursesByStudentId(user.getId())).thenReturn(courses);
+    	List<Course> found = courseService.getCoursesByStudentId(user.getId());
         assertEquals(found.size(), 1);
         assertEquals(found.get(0).getName(), course.getName());
     }
@@ -67,7 +66,7 @@ public class CourseServiceTest {
     public void getCoursesByTeacherIdTest() {
         List<Course> courses = Arrays.asList(course);
         
-    	when(courseRepository.getCoursesByTeacherId(1)).thenReturn(courses);
+    	when(courseRepository.getCoursesByTeacherId(user.getId())).thenReturn(courses);
     	List<Course> found = courseService.getCoursesByTeacherId(1);
         assertEquals(found.size(), 1);
         assertEquals(found.get(0).getName(), course.getName());
@@ -76,11 +75,11 @@ public class CourseServiceTest {
     @Test
     public void getCourseBySolutionTest() {
     	SolutionDto solution = SolutionDto.builder()
-    			.id(1)
-    			.activityId(1)
+    			.id(3)
+    			.activityId(4)
     			.build();
     	
-    	when(courseRepository.getByActivityId(solution.getId())).thenReturn(course);
+    	when(courseRepository.getByActivityId(solution.getActivityId())).thenReturn(course);
     	Course found = courseService.getCourseBySolution(solution);	
     	assertEquals(found.getName(), course.getName());
     }
@@ -95,7 +94,7 @@ public class CourseServiceTest {
     @Test
     public void updateCourseTest() throws NoSuchFieldException, Exception {
     	Course updatedCourse = Course.builder()
-    			.id(1)
+    			.id(course.getId())
     			.name("updated name")
     			.teacher(user)
     			.build();
