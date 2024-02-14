@@ -33,9 +33,9 @@ import lombok.ToString;
 @ToString
 @JsonTypeName("solution") 
 public class Solution {
-	public Solution(SolutionDto solution, ActivityService exerciseService, UserService userService) {
+	public Solution(SolutionDto solution, ActivityService activityService, UserService userService) {
 		this.id = solution.getId();
-		this.activity = exerciseService.getActivityById(solution.getActivityId());
+		this.activity = activityService.getActivityById(solution.getActivityId());
 		this.student = userService.findUserByID(solution.getStudentId());
 		this.code = solution.getCode();
 		this.submitted = solution.isSubmitted();

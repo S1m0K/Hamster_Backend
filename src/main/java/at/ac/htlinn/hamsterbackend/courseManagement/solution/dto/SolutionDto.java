@@ -33,7 +33,7 @@ public class SolutionDto {
 	private int studentId;
 	private String code;
 	private boolean submitted;
-	@JsonProperty("submission-date")
+	@JsonProperty("submission_date")
 	private Date submissionDate;
 	private String feedback;
 }

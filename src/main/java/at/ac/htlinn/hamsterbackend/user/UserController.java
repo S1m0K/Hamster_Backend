@@ -83,14 +83,13 @@ public class UserController {
 	@PostMapping
 	@PreAuthorize("hasAuthority('DEV')")
 	public ResponseEntity<?> createUser(@RequestBody JsonNode node) {
+
 		User user = mapper.convertValue(node.get("user"), User.class);
-		if (user == null) {
-			return new ResponseEntity<>("Could not save user -> wrong data "+ node.toPrettyString(), HttpStatus.BAD_REQUEST);
-		}
-		if (!userService.saveUser(user)) {
-			return new ResponseEntity<>("Could not save user -> error in database " + node.toPrettyString(), HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<>(HttpStatus.OK);
+		if (user == null) return new ResponseEntity<>("Request body is invalid!", HttpStatus.BAD_REQUEST);
+		
+		user = userService.saveUser(user);
+		return user != null ? ResponseEntity.ok(user.getId())
+				: new ResponseEntity<>("Could not create user!", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/**
@@ -115,14 +114,13 @@ public class UserController {
 	 * @param json
 	 * @return
 	 */
-	@DeleteMapping
+	@DeleteMapping("{userId}")
 	@PreAuthorize("hasAuthority('DEV')")
-	public ResponseEntity<?> deleteUser(@RequestBody JsonNode node) {
-		User user = mapper.convertValue(node.get("user"), User.class);
-		if (!userService.deleteUser(user.getId())) {
+	public ResponseEntity<?> deleteUser(@PathVariable int userId) {
+		if (!userService.deleteUser(userId)) {
 			return new ResponseEntity<>("Could not delete user!", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	/**

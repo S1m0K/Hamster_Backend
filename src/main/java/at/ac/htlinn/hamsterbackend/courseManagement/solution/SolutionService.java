@@ -35,17 +35,6 @@ public class SolutionService {
 		return solutionRepository.getById(solutionId);
 	}
 
-	public List<SolutionDto> getAllSolutions() {
-
-		// get solutions and convert to DTOs
-		List<SolutionDto> solutions = new ArrayList<SolutionDto>();
-		for (Solution solution : solutionRepository.findAll()) {
-			solutions.add(new SolutionDto(solution));
-		}
-		
-		return solutions;
-	}
-
 	// get all solutions for one activity
 	public List<SolutionDto> getSolutionsByActivityId(int activityId) {
 
@@ -74,6 +63,8 @@ public class SolutionService {
 		
 		return solutions;
 	}
+	
+	
 	
 	public int getNumberOfSubmittedSolutions(int activityId) {
 		return solutionRepository.getNumberOfSubmittedSolutions(activityId);

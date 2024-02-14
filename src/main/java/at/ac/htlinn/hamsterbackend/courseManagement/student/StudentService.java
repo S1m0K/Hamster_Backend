@@ -50,10 +50,6 @@ public class StudentService {
 			if (isUserStudent(studentId, courseId)) {
 				return false;
 			}
-			// check if student is already teacher
-//			if (isUserTeacher(studentId, courseId)) {
-//				return false;
-//			}
 			studentRepository.addUserToCourse(studentId, courseId);
 			return true;
 		} catch (IllegalArgumentException e) {

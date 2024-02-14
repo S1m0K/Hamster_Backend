@@ -33,16 +33,15 @@ public class UserService {
 		return userRepository.findByUsername(username);
 	}
 
-	public boolean saveUser(User user) {
+	public User saveUser(User user) {
 		try {
 			user.setPassword(customPasswordEncoder.encode(user.getPassword()));
 			user.setActive(true);
 			Role userRole = roleRepository.findByRole("USER");
 			user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
-			userRepository.save(user);
-			return true;
+			return userRepository.save(user);
 		} catch (Exception e) {
-			return false;
+			return null;
 		}
 	}
 
