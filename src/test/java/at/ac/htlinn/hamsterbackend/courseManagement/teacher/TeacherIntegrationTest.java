@@ -61,7 +61,7 @@ public class TeacherIntegrationTest {
 			.hamster("abc")
 			.build();
 	private final SolutionDto solution = SolutionDto.builder()
-			.studentId(1)
+			.studentName("admin")
 			.code("abc")
 			.build();
 

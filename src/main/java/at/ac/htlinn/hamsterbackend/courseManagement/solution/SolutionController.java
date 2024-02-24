@@ -141,7 +141,7 @@ public class SolutionController {
 		
 		// build solution from solutionDto
 		User user = userService.findUserByUsername(principal.getName());
-		solutionDto.setStudentId(user.getId());
+		solutionDto.setStudentName(user.getUsername());
 		// set submissionDate to current Date
 		solutionDto.setSubmissionDate(new Date());
 		Solution solution = new Solution(solutionDto, activityService, userService);

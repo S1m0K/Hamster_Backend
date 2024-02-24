@@ -18,7 +18,7 @@ public class SolutionDto {
 	public SolutionDto(Solution solution) {
 		this.id = solution.getId();
 		this.activityId = solution.getActivity().getId();
-		this.studentId = solution.getStudent().getId();
+		this.studentName = solution.getStudent().getUsername();
 		this.code = solution.getCode();
 		this.submitted = solution.isSubmitted();
 		this.submissionDate = solution.getSubmissionDate();
@@ -29,8 +29,8 @@ public class SolutionDto {
 	private int id;
 	@JsonProperty("activity_id")
 	private int activityId;
-	@JsonProperty("student_id")
-	private int studentId;
+	@JsonProperty("student_name")
+	private String studentName;
 	private String code;
 	private boolean submitted;
 	@JsonProperty("submission_date")

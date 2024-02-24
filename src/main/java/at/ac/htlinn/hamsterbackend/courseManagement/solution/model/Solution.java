@@ -36,7 +36,7 @@ public class Solution {
 	public Solution(SolutionDto solution, ActivityService activityService, UserService userService) {
 		this.id = solution.getId();
 		this.activity = activityService.getActivityById(solution.getActivityId());
-		this.student = userService.findUserByID(solution.getStudentId());
+		this.student = userService.findUserByUsername(solution.getStudentName());
 		this.code = solution.getCode();
 		this.submitted = solution.isSubmitted();
 		this.submissionDate = solution.getSubmissionDate();
