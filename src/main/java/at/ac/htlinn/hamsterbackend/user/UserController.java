@@ -41,7 +41,7 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping
-	@PreAuthorize("hasAuthority('DEV')")
+	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> getUserByUsername(@RequestParam(name = "username", required = false) String username) {
 		if(username == null) {
 			return new ResponseEntity<>(userService.selectMany(), HttpStatus.OK);
@@ -64,7 +64,7 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("{id}")
-	@PreAuthorize("hasAuthority('DEV')")
+	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> getUserById(@PathVariable long id) {
 		User userFound = userService.findUserByID(id);
 		if (userFound == null) {

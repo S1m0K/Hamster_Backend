@@ -37,10 +37,9 @@ import at.ac.htlinn.hamsterbackend.courseManagement.course.dto.CourseDto;
 public class CourseIntegrationTest {
 
     @Autowired
-    private ObjectMapper objectMapper;
-	
-    @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
     
     private final CourseDto course = CourseDto.builder()
 			.name("Course")

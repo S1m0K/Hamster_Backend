@@ -35,12 +35,12 @@ public class CourseServiceTest {
 			.teacher(user)
 			.build();
     
-    @Test
-    public void getCourseByIdTest() {
-    	when(courseRepository.getById(course.getId())).thenReturn(course);
-    	Course found = courseService.getCourseById(course.getId());
-    	assertEquals(found.getName(), course.getName());
-    }
+	@Test
+	public void getCourseByIdTest() {
+		when(courseRepository.getById(course.getId())).thenReturn(course);
+		Course found = courseService.getCourseById(course.getId());
+		assertEquals(found.getName(), course.getName());
+	}
     
     @Test
     public void getAllCoursesTest() {
