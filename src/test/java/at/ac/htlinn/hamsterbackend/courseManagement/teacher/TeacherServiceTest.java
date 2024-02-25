@@ -51,7 +51,6 @@ public class TeacherServiceTest {
 			.id(3)
 			.name("HamsterSolution")
 			.course(course)
-			.hamster("abc")
 			.build();
 
     @Test

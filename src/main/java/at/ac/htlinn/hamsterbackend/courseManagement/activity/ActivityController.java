@@ -26,12 +26,14 @@ import at.ac.htlinn.hamsterbackend.courseManagement.activity.model.Activity;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.dto.ActivityDto;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.model.Contest;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.dto.ContestDto;
+import at.ac.htlinn.hamsterbackend.courseManagement.activity.dto.ContestResults;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.model.Exercise;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.dto.ExerciseDto;
 import at.ac.htlinn.hamsterbackend.courseManagement.course.CourseService;
 import at.ac.htlinn.hamsterbackend.courseManagement.course.model.Course;
 import at.ac.htlinn.hamsterbackend.courseManagement.student.StudentService;
 import at.ac.htlinn.hamsterbackend.courseManagement.teacher.TeacherService;
+import at.ac.htlinn.hamsterbackend.terrain.TerrainObjectService;
 import at.ac.htlinn.hamsterbackend.user.UserService;
 import at.ac.htlinn.hamsterbackend.user.model.User;
 
@@ -47,6 +49,8 @@ public class ActivityController {
 	private StudentService studentService;
 	@Autowired
 	private TeacherService teacherService;
+	@Autowired
+	private TerrainObjectService terrainObjectService;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -137,9 +141,12 @@ public class ActivityController {
 		// parse DTO object accordingly
 		Activity activity = null;
 		if (exerciseDto != null)
-			activity = new Exercise(exerciseDto, courseService);
+			activity = new Exercise(exerciseDto, courseService, terrainObjectService);
 		else
-			activity = new Contest(contestDto, courseService);
+			activity = new Contest(contestDto, courseService, terrainObjectService);
+
+		if (activity.getName() == null) return new ResponseEntity<>("Name must not be empty!", HttpStatus.BAD_REQUEST);
+		if (activity.getCourse() == null) return new ResponseEntity<>("Course does not exist!", HttpStatus.BAD_REQUEST);
 		
 		// if user is a teacher, they must be teacher of the specified course
 		User user = userService.findUserByUsername(principal.getName());
@@ -209,5 +216,22 @@ public class ActivityController {
 		
 		return activityService.deleteActivity(activityId) ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
 				: new ResponseEntity<>("Could not delete activity!", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	/**
+	 * GET results of a contest
+	 * requires @PathVariable activityId (must be contest)
+	 */
+	@GetMapping("{activityId}/contest-results")
+	@PreAuthorize("hasAuthority('USER')")
+	public ResponseEntity<?> getContestResults(@PathVariable int activityId, Principal principal) {
+	    Activity activity = activityService.getActivityById(activityId);
+		if (activity == null) return new ResponseEntity<>("Activity does not exist!", HttpStatus.NOT_FOUND);
+	    if (activity instanceof Exercise) return new ResponseEntity<>("Activity must be a contest!", HttpStatus.BAD_REQUEST);
+
+		User user = userService.findUserByUsername(principal.getName());
+	    ContestResults results = activityService.getContestResults((Contest) activity, user.getId());
+		
+		return ResponseEntity.ok(results);
 	}
 }

@@ -20,23 +20,23 @@ public class ContestDto extends ActivityDto {
 				contest.getName(), contest.getDetails(), contest.isHidden());
 		this.start = contest.getStart();
 		this.ignoreHamsterPosition = contest.isIgnoreHamsterPosition();
-		this.visibleStartHamster = contest.getVisibleStartHamster();
-		this.visibleEndHamster = contest.getVisibleEndHamster();
-		this.hiddenStartHamster = contest.getHiddenStartHamster();
-		this.hiddenEndHamster = contest.getHiddenStartHamster();
+		this.startTerrainId = contest.getStartTerrain().getTerrainId();
+		this.endTerrainId = contest.getEndTerrain().getTerrainId();
+		this.hiddenStartTerrainId = contest.getHiddenStartTerrain().getTerrainId();
+		this.hiddenEndTerrainId = contest.getHiddenStartTerrain().getTerrainId();
 	}
 
 	private Date start;
 	@JsonProperty("ignore_hamster_position")
 	private boolean ignoreHamsterPosition;
 
-	@JsonProperty("visible_start_hamster")
-	private String visibleStartHamster;
-	@JsonProperty("visible_end_hamster")
-	private String visibleEndHamster;
+	@JsonProperty("start_terrain_id")
+	private long startTerrainId;
+	@JsonProperty("end_terrain_id")
+	private long endTerrainId;
 
-	@JsonProperty("hidden_start_hamster")
-	private String hiddenStartHamster;
-	@JsonProperty("hidden_end_hamster")
-	private String hiddenEndHamster;
+	@JsonProperty("hidden_start_terrain_id")
+	private long hiddenStartTerrainId;
+	@JsonProperty("hidden_end_terrain_id")
+	private long hiddenEndTerrainId;
 }

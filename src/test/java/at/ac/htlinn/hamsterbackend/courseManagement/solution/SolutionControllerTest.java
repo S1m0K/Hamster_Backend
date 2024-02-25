@@ -80,7 +80,6 @@ public class SolutionControllerTest {
 			.id(3)
 			.name("HamsterExercise")
 			.course(course)
-			.hamster("abc")
 			.build();
 	private final Solution solution = Solution.builder()
 			.id(4)

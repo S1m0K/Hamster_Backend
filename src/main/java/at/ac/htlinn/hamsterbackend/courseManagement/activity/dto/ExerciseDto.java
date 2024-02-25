@@ -2,6 +2,8 @@ package at.ac.htlinn.hamsterbackend.courseManagement.activity.dto;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.model.Exercise;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,19 +20,20 @@ public class ExerciseDto extends ActivityDto {
 	
 	@Builder
 	public ExerciseDto(int id, int courseId, String name, String details, boolean hidden,
-			Date deadline, String hamster) {
+			Date deadline, int terrainId) {
 		super(id, courseId, name, details, hidden);
 		this.deadline = deadline;
-		this.hamster = hamster;
+		this.terrainId = terrainId;
 	}
 	
 	public ExerciseDto(Exercise exercise) {
 		super(exercise.getId(), exercise.getCourse().getId(),
 				exercise.getName(), exercise.getDetails(), exercise.isHidden());
 		this.deadline = exercise.getDeadline();
-		this.hamster = exercise.getHamster();
+		this.terrainId = exercise.getTerrain().getTerrainId();
 	}
 
 	private Date deadline;
-	private String hamster;
+	@JsonProperty("terrain_id")
+	private long terrainId;
 }

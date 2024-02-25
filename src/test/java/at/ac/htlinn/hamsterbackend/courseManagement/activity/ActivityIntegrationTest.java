@@ -48,7 +48,6 @@ public class ActivityIntegrationTest {
 			.build();
 	private final ExerciseDto exercise = ExerciseDto.builder()
 			.name("Exercise")
-			.hamster("abc")
 			.build();
 
     private int courseId;
@@ -135,9 +134,9 @@ public class ActivityIntegrationTest {
           		.andDo(document("getActivitiesByCourse"));
 		
 		// update activity
-		String updatedHamster = "updated hamster";
+		String updatedName = "updated Exercise";
 		HashMap<String, Object> fields = new HashMap<String, Object>();
-    	fields.put("hamster", updatedHamster);
+    	fields.put("name", updatedName);
 		requestBody = objectMapper.writeValueAsString(fields);
 
         mockMvc.perform(patch("/activities/" + id)
@@ -151,7 +150,7 @@ public class ActivityIntegrationTest {
         mockMvc.perform(get("/activities/" + id)
 				.contentType(MediaType.APPLICATION_JSON)
 				.secure(true))
-				.andExpect(jsonPath("$.hamster", is(updatedHamster)));
+				.andExpect(jsonPath("$.name", is(updatedName)));
 		
         // delete activity
         mockMvc.perform(delete("/activities/" + id)

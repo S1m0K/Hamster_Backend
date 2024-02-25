@@ -39,7 +39,6 @@ public class SolutionServiceTest {
 			.id(3)
 			.name("HamsterSolution")
 			.course(course)
-			.hamster("abc")
 			.build();
 	private final Solution solution = Solution.builder()
 			.id(4)

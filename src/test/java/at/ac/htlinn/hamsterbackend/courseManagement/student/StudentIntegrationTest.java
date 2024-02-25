@@ -55,7 +55,6 @@ public class StudentIntegrationTest {
 			.build();
 	private final ExerciseDto exercise = ExerciseDto.builder()
 			.name("Exercise")
-			.hamster("abc")
 			.build();
 	private final SolutionDto solution = SolutionDto.builder()
 			.studentName("admin")

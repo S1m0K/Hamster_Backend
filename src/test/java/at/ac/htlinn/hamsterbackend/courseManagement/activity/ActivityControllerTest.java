@@ -81,7 +81,6 @@ public class ActivityControllerTest {
 			.id(3)
 			.name("HamsterExercise")
 			.course(course)
-			.hamster("abc")
 			.build();
 	
 	@BeforeEach

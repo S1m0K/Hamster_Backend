@@ -2,14 +2,19 @@ package at.ac.htlinn.hamsterbackend.courseManagement.activity.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.dto.ContestDto;
 import at.ac.htlinn.hamsterbackend.courseManagement.course.CourseService;
+import at.ac.htlinn.hamsterbackend.terrain.TerrainObject;
+import at.ac.htlinn.hamsterbackend.terrain.TerrainObjectService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,14 +34,14 @@ import lombok.ToString;
 public class Contest extends Activity {
 	public static final String type = "contest";
 	
-	public Contest(ContestDto contest, CourseService courseService) {
+	public Contest(ContestDto contest, CourseService courseService, TerrainObjectService terrainObjectService) {
 		super(contest.getId(), contest.getName(), contest.getDetails(), contest.isHidden(),
 				courseService.getCourseById(contest.getCourseId()));
 		this.start = contest.getStart();
-		this.visibleStartHamster = contest.getVisibleStartHamster();
-		this.visibleEndHamster = contest.getVisibleEndHamster();
-		this.hiddenStartHamster = contest.getHiddenStartHamster();
-		this.hiddenEndHamster = contest.getHiddenStartHamster();
+		this.startTerrain = terrainObjectService.getTerrainObject(contest.getStartTerrainId());
+		this.endTerrain = terrainObjectService.getTerrainObject(contest.getEndTerrainId());
+		this.hiddenStartTerrain = terrainObjectService.getTerrainObject(contest.getHiddenStartTerrainId());
+		this.hiddenEndTerrain = terrainObjectService.getTerrainObject(contest.getHiddenEndTerrainId());
 	}
 	
 	@Column(name = "start")
@@ -44,17 +49,21 @@ public class Contest extends Activity {
 	@Column(name = "ignore_hamster_position")
 	private boolean ignoreHamsterPosition;
 	
-	// initial territory; visible for students
-	@Column(name = "visible_start_hamster", nullable = false)
-	private String visibleStartHamster;
-	// expected resulting territory; visible for students (optional)
-	@Column(name = "visible_end_hamster")
-	private String visibleEndHamster;
+	// initial terrain; visible for students
+    @ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "start_terrain") // should not be nullable
+	private TerrainObject startTerrain;
+	// expected resulting terrain; visible for students
+    @ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "end_terrain") // should not be nullable
+	private TerrainObject endTerrain;
 	
-	// initial territory; hidden for students (optional)
-	@Column(name = "hidden_start_hamster")
-	private String hiddenStartHamster;
-	// expected resulting territory; hidden for students (optional)
-	@Column(name = "hidden_end_hamster")
-	private String hiddenEndHamster;
+	// initial terrain; hidden for students (optional)
+    @ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "hidden_start_terrain")
+	private TerrainObject hiddenStartTerrain;
+	// expected resulting terrain; hidden for students (optional)
+    @ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "hidden_end_terrain")
+	private TerrainObject hiddenEndTerrain;
 }

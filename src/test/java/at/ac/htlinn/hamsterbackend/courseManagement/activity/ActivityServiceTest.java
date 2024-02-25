@@ -58,15 +58,15 @@ public class ActivityServiceTest {
     @Test
     public void updateActivityTest() throws NoSuchFieldException, Exception {
     	Exercise updatedExercise = Exercise.builder()
-    			.hamster("Hamster")
+    			.name("updated Exercise")
     			.build();
     	
     	HashMap<String, Object> fields = new HashMap<String, Object>();
-    	fields.put("hamster", updatedExercise.getHamster());
+    	fields.put("name", updatedExercise.getName());
     	
     	when(activityRepository.save(exercise)).thenReturn(exercise);
 		Exercise updated = (Exercise) activityService.updateActivity(exercise, fields);
-    	assertEquals(updated.getHamster(), updatedExercise.getHamster());
+    	assertEquals(updated.getName(), updatedExercise.getName());
     }
     
     @Test
