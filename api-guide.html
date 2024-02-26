@@ -680,7 +680,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 417
+Content-Length: 416
 
 [ {
   "course_id" : 5,
@@ -690,15 +690,15 @@ Content-Length: 417
     "details" : null,
     "date" : null,
     "type" : "exercise",
-    "hamster" : "abc",
     "activity_id" : 5,
     "solution" : {
       "code" : "abc",
       "submitted" : false,
-      "submissionDate" : "2024-02-14T17:16:29.000+00:00",
+      "submissionDate" : "2024-02-26T19:13:53.000+00:00",
       "feedback" : null,
       "solution_id" : 3
-    }
+    },
+    "terrain_id" : 3
   } ]
 } ]</code></pre>
 </div>
@@ -1107,16 +1107,16 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 155
+Content-Length: 154
 
 {
   "name" : "Exercise",
   "details" : null,
   "hidden" : false,
   "deadline" : null,
-  "hamster" : "abc",
   "activity_id" : 1,
-  "course_id" : 1
+  "course_id" : 1,
+  "terrain_id" : 1
 }</code></pre>
 </div>
 </div>
@@ -1153,24 +1153,24 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 316
+Content-Length: 314
 
 [ {
   "name" : "Exercise",
   "details" : null,
   "hidden" : false,
   "deadline" : null,
-  "hamster" : "abc",
   "activity_id" : 1,
-  "course_id" : 1
+  "course_id" : 1,
+  "terrain_id" : 1
 }, {
   "name" : "Exercise",
   "details" : null,
   "hidden" : false,
   "deadline" : null,
-  "hamster" : "abc",
   "activity_id" : 2,
-  "course_id" : 1
+  "course_id" : 1,
+  "terrain_id" : 1
 } ]</code></pre>
 </div>
 </div>
@@ -1188,7 +1188,7 @@ Returns the ID of the created activity.</p>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /activities HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 192
+Content-Length: 191
 Host: localhost:8080
 
 {
@@ -1197,9 +1197,9 @@ Host: localhost:8080
     "details" : null,
     "hidden" : false,
     "deadline" : null,
-    "hamster" : "abc",
     "activity_id" : 0,
-    "course_id" : 1
+    "course_id" : 1,
+    "terrain_id" : 1
   }
 }</code></pre>
 </div>
@@ -1240,11 +1240,11 @@ Returns the ID of the updated activity.</p>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /activities/2 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 37
+Content-Length: 35
 Host: localhost:8080
 
 {
-  "hamster" : "updated hamster"
+  "name" : "updated Exercise"
 }</code></pre>
 </div>
 </div>
@@ -1341,7 +1341,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 189
+Content-Length: 197
 
 {
   "code" : "abc",
@@ -1349,8 +1349,8 @@ Content-Length: 189
   "feedback" : null,
   "solution_id" : 1,
   "activity_id" : 3,
-  "student_id" : 1,
-  "submission_date" : "2024-02-14T17:16:28.000+00:00"
+  "student_name" : "admin",
+  "submission_date" : "2024-02-26T19:13:52.000+00:00"
 }</code></pre>
 </div>
 </div>
@@ -1387,7 +1387,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 193
+Content-Length: 201
 
 [ {
   "code" : "abc",
@@ -1395,8 +1395,8 @@ Content-Length: 193
   "feedback" : null,
   "solution_id" : 2,
   "activity_id" : 4,
-  "student_id" : 1,
-  "submission_date" : "2024-02-14T17:16:28.000+00:00"
+  "student_name" : "admin",
+  "submission_date" : "2024-02-26T19:13:52.000+00:00"
 } ]</code></pre>
 </div>
 </div>
@@ -1433,7 +1433,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 384
+Content-Length: 400
 
 [ {
   "code" : "abc",
@@ -1441,16 +1441,16 @@ Content-Length: 384
   "feedback" : null,
   "solution_id" : 1,
   "activity_id" : 3,
-  "student_id" : 1,
-  "submission_date" : "2024-02-14T17:16:28.000+00:00"
+  "student_name" : "admin",
+  "submission_date" : "2024-02-26T19:13:52.000+00:00"
 }, {
   "code" : "abc",
   "submitted" : false,
   "feedback" : null,
   "solution_id" : 2,
   "activity_id" : 4,
-  "student_id" : 1,
-  "submission_date" : "2024-02-14T17:16:28.000+00:00"
+  "student_name" : "admin",
+  "submission_date" : "2024-02-26T19:13:52.000+00:00"
 } ]</code></pre>
 </div>
 </div>
@@ -1468,7 +1468,7 @@ Returns the created solution.</p>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /solutions HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 199
+Content-Length: 207
 Host: localhost:8080
 
 {
@@ -1478,7 +1478,7 @@ Host: localhost:8080
     "feedback" : null,
     "solution_id" : 0,
     "activity_id" : 4,
-    "student_id" : 1,
+    "student_name" : "admin",
     "submission_date" : null
   }
 }</code></pre>
@@ -1501,7 +1501,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 189
+Content-Length: 197
 
 {
   "code" : "abc",
@@ -1509,8 +1509,8 @@ Content-Length: 189
   "feedback" : null,
   "solution_id" : 2,
   "activity_id" : 4,
-  "student_id" : 1,
-  "submission_date" : "2024-02-14T17:16:28.087+00:00"
+  "student_name" : "admin",
+  "submission_date" : "2024-02-26T19:13:51.848+00:00"
 }</code></pre>
 </div>
 </div>
@@ -1528,7 +1528,7 @@ Returns the updated solution.</p>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /solutions HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 208
+Content-Length: 216
 Host: localhost:8080
 
 {
@@ -1538,7 +1538,7 @@ Host: localhost:8080
     "feedback" : null,
     "solution_id" : 2,
     "activity_id" : 4,
-    "student_id" : 1,
+    "student_name" : "admin",
     "submission_date" : null
   }
 }</code></pre>
@@ -1561,7 +1561,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 198
+Content-Length: 206
 
 {
   "code" : "updated code",
@@ -1569,8 +1569,8 @@ Content-Length: 198
   "feedback" : null,
   "solution_id" : 2,
   "activity_id" : 4,
-  "student_id" : 1,
-  "submission_date" : "2024-02-14T17:16:28.000+00:00"
+  "student_name" : "admin",
+  "submission_date" : "2024-02-26T19:13:52.000+00:00"
 }</code></pre>
 </div>
 </div>
@@ -1613,7 +1613,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 217
+Content-Length: 225
 
 {
   "code" : "updated code",
@@ -1621,8 +1621,8 @@ Content-Length: 217
   "feedback" : "Feedback from teacher",
   "solution_id" : 2,
   "activity_id" : 4,
-  "student_id" : 1,
-  "submission_date" : "2024-02-14T17:16:28.000+00:00"
+  "student_name" : "admin",
+  "submission_date" : "2024-02-26T19:13:52.000+00:00"
 }</code></pre>
 </div>
 </div>

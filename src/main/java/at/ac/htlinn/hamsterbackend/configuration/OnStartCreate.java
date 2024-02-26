@@ -14,8 +14,6 @@ import at.ac.htlinn.hamsterbackend.security.CustomPasswordEncoder;
 import at.ac.htlinn.hamsterbackend.user.UserRepository;
 import at.ac.htlinn.hamsterbackend.user.model.User;
 
-import javax.persistence.EntityManager;
-
 
 @Component
 @PropertySource("classpath:settings.properties")
@@ -26,30 +24,18 @@ public class OnStartCreate implements CommandLineRunner {
 
 	private final CustomPasswordEncoder passwordEncoder;
 
-	// TODO: creating database here not working yet!
-	// but a beginning is there
-	private final EntityManager entityManager;
-
 	@Value("${database}")
 	private String database; 
 	
 	public OnStartCreate(UserRepository userRepository, CustomPasswordEncoder passwordEncoder,
-			RoleRepository roleRepository, EntityManager entityManager) {
+			RoleRepository roleRepository) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.roleRepository = roleRepository;
-		this.entityManager = entityManager;
 	}
 
 	@Override
 	public void run(String... args) {
-		try {
-			entityManager.getTransaction().begin();
-			entityManager.createNativeQuery(String.format("CREATE DATABASE %s", database)).executeUpdate();
-			entityManager.getTransaction().commit();
-		} catch (Exception e) {
-			// database already exists
-		}
 		if (roleRepository.count() == 0) {
 			roleRepository.save(new Role("ADMIN"));
 			roleRepository.save(new Role("DEV"));
