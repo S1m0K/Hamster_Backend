@@ -27,32 +27,15 @@ public class TeacherController {
 	@Autowired
 	private UserService userService;
 
-	/**
-	 * GET teacher by course id
-	 * requires @PathVariable courseId
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@GetMapping
 	@PreAuthorize("hasAuthority('USER')")
-	public ResponseEntity<?> getCourseTeacherByCourseId(
+	public ResponseEntity<?> getTeacherByCourseId(
 			@RequestParam(name = "course_id", required = true) Integer courseId) {
 		
 		User teacher = teacherService.getCourseTeacher(courseId);
 		return ResponseEntity.ok(new UserDto(teacher));
 	}
 	
-	/**
-	 * GET all courses for active user (must be teacher)
-	 * 
-	 * or with optional @RequestParam course_id:
-	 * GET info for one course
-	 *
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@GetMapping("my-view")
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> getViewForLoggedInTeacher(

@@ -37,6 +37,8 @@ import at.ac.htlinn.hamsterbackend.courseManagement.course.model.Course;
 import at.ac.htlinn.hamsterbackend.courseManagement.student.StudentService;
 import at.ac.htlinn.hamsterbackend.courseManagement.teacher.TeacherService;
 import at.ac.htlinn.hamsterbackend.security.CustomPasswordEncoder;
+import at.ac.htlinn.hamsterbackend.terrain.TerrainObject;
+import at.ac.htlinn.hamsterbackend.terrain.TerrainObjectService;
 import at.ac.htlinn.hamsterbackend.user.MyUserDetailsService;
 import at.ac.htlinn.hamsterbackend.user.UserService;
 import at.ac.htlinn.hamsterbackend.user.model.User;
@@ -60,6 +62,8 @@ public class ActivityControllerTest {
 	private TeacherService teacherService;
     @MockBean
 	private UserService userService;
+    @MockBean
+	private TerrainObjectService terrainObjectService;
     
     @MockBean
     private CustomPasswordEncoder customPasswordEncoder;
@@ -77,10 +81,14 @@ public class ActivityControllerTest {
 			.name("Hamster")
 			.teacher(user)
 			.build();
+    private final TerrainObject terrainObject = TerrainObject.builder()
+    		.terrainId(4)
+            .build();
 	private final Exercise exercise = Exercise.builder()
-			.id(3)
+			.id(5)
 			.name("HamsterExercise")
 			.course(course)
+			.terrain(terrainObject)
 			.build();
 	
 	@BeforeEach
@@ -121,6 +129,7 @@ public class ActivityControllerTest {
     @WithMockUser(username = "admin", authorities = "ADMIN")
     public void createActivityTest() throws Exception {
         when(courseService.getCourseById(course.getId())).thenReturn(course);
+        when(terrainObjectService.getTerrainObject(terrainObject.getTerrainId())).thenReturn(terrainObject);
 		when(activityService.saveActivity(exercise)).thenReturn(exercise);
     	
 		ObjectNode objectNode = objectMapper.createObjectNode();

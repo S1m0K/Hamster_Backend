@@ -40,15 +40,6 @@ public class CourseController {
 	@Autowired
 	private ObjectMapper mapper;
 	
-	// TODO: proper parameter and return documentation
-	
-	/**
-	 * GET course by id
-	 * requires @PathVariable courseId
-	 * 
-	 * @param	courseId
-	 * @return	course
-	 */
 	@GetMapping("{courseId}")
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> getCourseById(@PathVariable int courseId) {
@@ -58,12 +49,6 @@ public class CourseController {
 		return ResponseEntity.ok(new CourseDto(course));
 	}
 	
-	/**
-	 * GET all courses
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@GetMapping
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> getAllCourses() {
@@ -75,13 +60,6 @@ public class CourseController {
 		return ResponseEntity.ok(courses);
 	}
 	
-	/**
-	 * POST course
-	 * requires in @RequestBody course object
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@PostMapping
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> createCourse(@RequestBody JsonNode node, Principal principal) {
@@ -98,13 +76,6 @@ public class CourseController {
 				: new ResponseEntity<>("Could not create course!", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	/**
-	 * PATCH course
-	 * requires @PathVariable courseId and in @RequestBody object
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@PatchMapping("{courseId}")
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> updateCourse(@PathVariable int courseId, @RequestBody Map<String, Object> fields, Principal principal) {
@@ -136,13 +107,6 @@ public class CourseController {
 		}
 	}
 
-	/**
-	 * DELETE course
-	 * requires @PathVariable courseId
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@DeleteMapping("{courseId}")
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> deleteCourse(@PathVariable int courseId, Principal principal) {

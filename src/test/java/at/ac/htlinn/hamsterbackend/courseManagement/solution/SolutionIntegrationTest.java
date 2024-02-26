@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.dto.ExerciseDto;
 import at.ac.htlinn.hamsterbackend.courseManagement.course.dto.CourseDto;
 import at.ac.htlinn.hamsterbackend.courseManagement.solution.dto.SolutionDto;
+import at.ac.htlinn.hamsterbackend.terrain.Field;
+import at.ac.htlinn.hamsterbackend.terrain.HamsterObject;
+import at.ac.htlinn.hamsterbackend.terrain.TerrainObject;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,6 +52,12 @@ public class SolutionIntegrationTest {
     private final CourseDto course = CourseDto.builder()
 			.name("Course")
 			.build();
+    private final HamsterObject hamsterObject = HamsterObject.builder()
+            .build();
+    private final TerrainObject terrainObject = TerrainObject.builder()
+    		.defaultHamster(hamsterObject)
+    		.customFields(new ArrayList<Field>())
+            .build();
 	private final ExerciseDto exercise = ExerciseDto.builder()
 			.name("Exercise")
 			.build();
@@ -56,6 +67,7 @@ public class SolutionIntegrationTest {
 			.build();
 
     private int courseId;
+    private long terrainObjectId;
     private int activityId;
     private int solutionId;
 	
@@ -78,6 +90,17 @@ public class SolutionIntegrationTest {
 		        .andReturn();
 		courseId = objectMapper.readValue(result.getResponse().getContentAsString(), int.class);
 		exercise.setCourseId(courseId);
+		
+		// create terrainObject
+		requestBody = objectMapper.writeValueAsString(terrainObject);
+		result = mockMvc.perform(post("/terrainObject/save")
+		        .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        		.secure(true))
+                .andExpect(status().isOk())
+                .andReturn();
+        terrainObjectId = objectMapper.readValue(result.getResponse().getContentAsString(), TerrainObject.class).getTerrainId();
+		exercise.setTerrainId(terrainObjectId);
 		
 		// create exercise
 		objectNode = objectMapper.createObjectNode();
@@ -132,6 +155,11 @@ public class SolutionIntegrationTest {
         mockMvc.perform(delete("/activities/" + activityId)
 	            .secure(true))
 				.andExpect(status().isNoContent());
+        
+        // delete terrainObject
+        mockMvc.perform(delete("/terrainObject/delete/" + terrainObjectId)
+	            .secure(true))
+				.andExpect(status().isOk());
         
 		// delete course
         mockMvc.perform(delete("/courses/" + courseId)

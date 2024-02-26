@@ -53,7 +53,7 @@ public class Exercise extends Activity {
 	@Column(name = "deadline")
 	private Date deadline;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "terrain") // should not be nullable
 	private TerrainObject terrain;
 }

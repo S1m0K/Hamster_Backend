@@ -48,13 +48,6 @@ public class SolutionController {
 	@Autowired
 	private ObjectMapper mapper;
 	
-	/**
-	 * GET solution by id
-	 * requires @PathVariable solutionId
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@GetMapping("{solutionId}")
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> getSolutionById(@PathVariable int solutionId, Principal principal) {
@@ -72,13 +65,6 @@ public class SolutionController {
 		return ResponseEntity.ok(new SolutionDto(solution));
 	}
 	
-	/**
-	 * GET all solutions
-	 * optional @RequestParam activityId
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@GetMapping
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> getAllSolutions(
@@ -126,13 +112,6 @@ public class SolutionController {
 		return new ResponseEntity<>("Request must include either activity_id or course_id and student_id!", HttpStatus.BAD_REQUEST);
 	}
 	
-	/**
-	 * PUT solution for an activity
-	 * requires in @RequestBody solution object
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@PutMapping
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> addSolutionToActivity(@RequestBody JsonNode node, Principal principal) {
@@ -189,13 +168,6 @@ public class SolutionController {
 				: new ResponseEntity<>("Could not put solution!", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	/**
-	 * PATCH feedback to a solution
-	 * requires @PathVariable solutionId + in @RequestBody feedback object
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@PatchMapping("{solutionId}/feedback")
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> feedbackSolution(@PathVariable int solutionId, @RequestBody JsonNode node, Principal principal) {
@@ -217,13 +189,6 @@ public class SolutionController {
 	    		: new ResponseEntity<>("Could not save feedback!", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	/**
-	 * DELETE existing solution
-	 * requires @PathVariable solutionId
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@DeleteMapping("{solutionId}")
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> deleteSolution(@PathVariable int solutionId, Principal principal) {

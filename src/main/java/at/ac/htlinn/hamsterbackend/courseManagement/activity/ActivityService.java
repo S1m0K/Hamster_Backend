@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,13 +13,20 @@ import java.util.stream.Collectors;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import at.ac.htlinn.hamsterbackend.courseManagement.activity.dto.ActivityDto;
+import at.ac.htlinn.hamsterbackend.courseManagement.activity.dto.ContestDto;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.dto.ContestParticipant;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.dto.ContestResults;
+import at.ac.htlinn.hamsterbackend.courseManagement.activity.dto.ExerciseDto;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.model.Activity;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.model.Contest;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.model.Exercise;
+import at.ac.htlinn.hamsterbackend.courseManagement.course.CourseService;
 import at.ac.htlinn.hamsterbackend.courseManagement.solution.SolutionService;
 import at.ac.htlinn.hamsterbackend.courseManagement.solution.dto.SolutionDto;
+import at.ac.htlinn.hamsterbackend.terrain.TerrainObjectService;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -26,6 +34,8 @@ import lombok.AllArgsConstructor;
 public class ActivityService {
 
 	private SolutionService solutionService;
+	private CourseService courseService;
+	private TerrainObjectService terrainObjectService;
 	private ActivityRepository activityRepository;
 
 	public Activity getActivityById(int activityId) { 
@@ -40,33 +50,66 @@ public class ActivityService {
 		}
 	}
 	
+	private Map<String, String> getFieldNameMap(Class<?> cls) {
+	    Map<String, String> map = new HashMap<>();
+	    
+	    Field[] fields = cls.getDeclaredFields();
+	    for (Field field : fields) {
+	        if (field.isAnnotationPresent(JsonProperty.class)) {
+	            String annotationValue = field.getAnnotation(JsonProperty.class).value();
+	            map.put(annotationValue, field.getName());
+	        } else {
+	        	map.put(field.getName(), field.getName());
+	        }
+	    }
+	    
+	    return map;
+	}
+	
 	public Activity updateActivity(Activity activity, Map<String, Object> fields) throws NoSuchFieldException, Exception {
 		// attempt to update all specified fields
-		// TODO: key currently needs to match actual field names instead of JSON field names
+
+		ActivityDto activityDto = activity instanceof Exercise ? 
+				new ExerciseDto((Exercise) activity) : new ContestDto((Contest) activity);
+		
+		// create maps to replace @JsonProperty values with actual field names
+		Map<String, String> activityMap = getFieldNameMap(ActivityDto.class);
+		Map<String, String> subclassMap = activityDto instanceof ExerciseDto ?
+				getFieldNameMap(ExerciseDto.class) : getFieldNameMap(ContestDto.class);
+		
+		System.out.println(activityMap);
+		System.out.println(subclassMap);
+		
 		for (Map.Entry<String, Object> set : fields.entrySet()) {
-			try {
-				Field field;
-				try {
-					// look for field in superclass Activity
-					field = Activity.class.getDeclaredField(set.getKey());
-				}
-				catch (NoSuchFieldException e) {
-					// look for field in subclass
-					field = activity instanceof Exercise ?
-						Exercise.class.getDeclaredField(set.getKey()) : Contest.class.getDeclaredField(set.getKey());
-				}
-				
-		    	field.setAccessible(true);
-		    	field.set(activity, set.getValue());
-			}
-			catch (NoSuchFieldException e) {
-				System.out.println(e);
+			String key = set.getKey();
+			Field field;
+			
+			// the field is looked for in the super- & subclass
+			if (activityMap.containsKey(key)) {
+				field = ActivityDto.class.getDeclaredField(activityMap.get(key));
+			} else if (subclassMap.containsKey(key)) {
+				field = activityDto instanceof ExerciseDto ?
+					ExerciseDto.class.getDeclaredField(subclassMap.get(key))
+					: ContestDto.class.getDeclaredField(subclassMap.get(key));
+			} else {
+				System.err.println("attempted to update invalid field " + set.getKey());
 				throw new NoSuchFieldException(set.getKey());
 			}
+			
+			// attempt to update field
+			try {
+		    	field.setAccessible(true);
+		    	field.set(activityDto, set.getValue());
+			}
 			catch (Exception e) {
+				e.printStackTrace();
 				throw new Exception(set.getKey());
 			}
 		}
+		
+		activity = activity instanceof Exercise ? 
+				new Exercise((ExerciseDto) activityDto, courseService, terrainObjectService)
+				: new Contest((ContestDto) activityDto, courseService, terrainObjectService);
 		
 		return saveActivity(activity);
 	}

@@ -19,6 +19,7 @@ import at.ac.htlinn.hamsterbackend.courseManagement.course.model.Course;
 import at.ac.htlinn.hamsterbackend.courseManagement.solution.SolutionService;
 import at.ac.htlinn.hamsterbackend.courseManagement.solution.model.Solution;
 import at.ac.htlinn.hamsterbackend.courseManagement.student.dto.StudentCourseDto;
+import at.ac.htlinn.hamsterbackend.terrain.TerrainObject;
 import at.ac.htlinn.hamsterbackend.user.model.User;
 
 @SpringBootTest
@@ -44,10 +45,14 @@ public class StudentServiceTest {
 			.name("Hamster")
 			.teacher(user)
 			.build();
+    private final TerrainObject terrainObject = TerrainObject.builder()
+    		.terrainId(3)
+            .build();
 	private final Exercise exercise = Exercise.builder()
 			.id(3)
 			.name("HamsterSolution")
 			.course(course)
+			.terrain(terrainObject)
 			.build();
 	private final Solution solution = Solution.builder()
 			.id(4)

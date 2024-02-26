@@ -15,7 +15,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.model.Activity;
 import at.ac.htlinn.hamsterbackend.courseManagement.activity.model.Exercise;
+import at.ac.htlinn.hamsterbackend.courseManagement.course.CourseService;
 import at.ac.htlinn.hamsterbackend.courseManagement.course.model.Course;
+import at.ac.htlinn.hamsterbackend.terrain.TerrainObject;
+import at.ac.htlinn.hamsterbackend.terrain.TerrainObjectService;
 import at.ac.htlinn.hamsterbackend.user.model.User;
 
 @SpringBootTest
@@ -26,6 +29,10 @@ public class ActivityServiceTest {
 	
     @MockBean
     ActivityRepository activityRepository;
+    @MockBean
+    CourseService courseService;
+    @MockBean
+    TerrainObjectService terrainObjectService;
     
 	private final User user = User.builder()
 			.id(1)
@@ -35,10 +42,14 @@ public class ActivityServiceTest {
 			.name("Hamster")
 			.teacher(user)
 			.build();
+    private final TerrainObject terrainObject = TerrainObject.builder()
+    		.terrainId(3)
+            .build();
 	private final Exercise exercise = Exercise.builder()
-			.id(3)
+			.id(4)
 			.name("HamsterExercise")
 			.course(course)
+			.terrain(terrainObject)
 			.build();
     
     @Test
@@ -58,13 +69,18 @@ public class ActivityServiceTest {
     @Test
     public void updateActivityTest() throws NoSuchFieldException, Exception {
     	Exercise updatedExercise = Exercise.builder()
-    			.name("updated Exercise")
+    			.id(4)
+    			.name("HamsterExerciseUpdated")
+    			.course(course)
+    			.terrain(terrainObject)
     			.build();
     	
     	HashMap<String, Object> fields = new HashMap<String, Object>();
     	fields.put("name", updatedExercise.getName());
-    	
-    	when(activityRepository.save(exercise)).thenReturn(exercise);
+
+    	when(courseService.getCourseById(course.getId())).thenReturn(course);
+    	when(terrainObjectService.getTerrainObject(terrainObject.getTerrainId())).thenReturn(terrainObject);
+    	when(activityRepository.save(updatedExercise)).thenReturn(updatedExercise);
 		Exercise updated = (Exercise) activityService.updateActivity(exercise, fields);
     	assertEquals(updated.getName(), updatedExercise.getName());
     }

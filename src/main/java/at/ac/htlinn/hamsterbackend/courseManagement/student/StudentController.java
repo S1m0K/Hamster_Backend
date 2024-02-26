@@ -42,13 +42,6 @@ public class StudentController {
 	@Autowired
 	private ObjectMapper mapper;
 	
-	/**
-	 * GET all students or all students for one course
-	 * optional @RequestParam courseId
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@GetMapping
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> getAllStudentsByCourseId(
@@ -84,14 +77,6 @@ public class StudentController {
 		return ResponseEntity.ok(students);
 	}
 	
-	/**
-	 * POST existing student to existing course
-	 * requires @RequestParam courseId and in @RequestBody student list
-	 * 
-	 * @param json
-	 * @return
-	 * @throws JsonProcessingException 
-	 */
 	@PostMapping
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> addStudentsToCourse(
@@ -126,14 +111,7 @@ public class StudentController {
 		String json = mapper.writeValueAsString(objectNode);
 		return  new ResponseEntity<>(json, HttpStatus.BAD_REQUEST);
 	}
-	
-	/**
-	 * DELETE student from course
-	 * requires @PathVariable studentId and courseId
-	 * 
-	 * @param json
-	 * @return
-	 */
+
 	@DeleteMapping("{student_id}")
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> removeStudentFromCourse(
@@ -153,15 +131,6 @@ public class StudentController {
 				: new ResponseEntity<>("Could not remove student from course!", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-
-	
-	/**
-	 * GET all courses, exercises and solutions for active user (must be student)
-	 *
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@GetMapping("my-view")
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> getViewForLoggedInStudent(Principal principal) {

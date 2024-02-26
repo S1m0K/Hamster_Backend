@@ -56,13 +56,6 @@ public class ActivityController {
 	@Autowired
 	private ObjectMapper mapper;
 	
-	/**
-	 * GET activity by id
-	 * requires @PathVariable activityId
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@GetMapping("{activityId}")
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> getActivityById(@PathVariable int activityId, Principal principal) {
@@ -85,13 +78,6 @@ public class ActivityController {
 		return ResponseEntity.ok(activityDTO);
 	}
 	
-	/**
-	 * GET all activities for a course
-	 * requires @RequestParam courseId
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@GetMapping
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> getAllActivitiesByCourseId(
@@ -120,13 +106,6 @@ public class ActivityController {
 		return ResponseEntity.ok(activities);
 	}
 	
-	/**
-	 * POST activity for existing course
-	 * requires in @RequestBody activity object
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@PostMapping
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> createActivity(@RequestBody JsonNode node, Principal principal) {
@@ -158,13 +137,6 @@ public class ActivityController {
 				: new ResponseEntity<>("Could not create activity!", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	/**
-	 * PATCH activity
-	 * requires @PathVariable activityId and in @RequestBody object
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@PatchMapping("{activityId}")
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> updateActivity(@PathVariable int activityId, @RequestBody Map<String, Object> fields,
@@ -197,13 +169,6 @@ public class ActivityController {
 		}
 	}
 
-	/**
-	 * DELETE existing activity
-	 * requires @PathVariable activityId
-	 * 
-	 * @param json
-	 * @return
-	 */
 	@DeleteMapping("{activityId}")
 	@PreAuthorize("hasAuthority('TEACHER')")
 	public ResponseEntity<?> deleteActivity(@PathVariable int activityId, Principal principal) {
@@ -218,10 +183,6 @@ public class ActivityController {
 				: new ResponseEntity<>("Could not delete activity!", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	/**
-	 * GET results of a contest
-	 * requires @PathVariable activityId (must be contest)
-	 */
 	@GetMapping("{activityId}/contest-results")
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> getContestResults(@PathVariable int activityId, Principal principal) {

@@ -59,7 +59,6 @@ public class CourseService {
 	
 	public Course updateCourse(Course course, Map<String, Object> fields) throws NoSuchFieldException, Exception {
 		// attempt to update all specified fields
-		// TODO: key currently needs to match actual field names instead of JSON field names
 		for (Map.Entry<String, Object> set : fields.entrySet()) {
 			try {
 				Field field = Course.class.getDeclaredField(set.getKey());
