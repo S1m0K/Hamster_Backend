@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExerciseDto extends ActivityDto {
+	private final String type = Exercise.type;
 	
 	@Builder
 	public ExerciseDto(int id, int courseId, String name, String details, boolean hidden,

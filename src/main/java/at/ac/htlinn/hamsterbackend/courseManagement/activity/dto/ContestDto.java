@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContestDto extends ActivityDto {
+	private final String type = Contest.type;
+	
 	public ContestDto(Contest contest) {
 		super(contest.getId(), contest.getCourse().getId(),
 				contest.getName(), contest.getDetails(), contest.isHidden());
