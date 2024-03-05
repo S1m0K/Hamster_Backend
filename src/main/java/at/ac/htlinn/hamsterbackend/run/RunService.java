@@ -7,14 +7,14 @@ import at.ac.htlinn.hamsterbackend.hamsterEvaluation.workbench.Workbench;
 import at.ac.htlinn.hamsterbackend.program.Program;
 import at.ac.htlinn.hamsterbackend.program.ProgramService;
 import at.ac.htlinn.hamsterbackend.terrain.TerrainObject;
-import at.ac.htlinn.hamsterbackend.terrain.TerrainObjectService;
 import at.ac.htlinn.hamsterbackend.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import at.ac.htlinn.hamsterbackend.hamsterEvaluation.lego.model.LegoPrecompiler;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 
@@ -23,29 +23,57 @@ public class RunService {
     @Autowired
     ProgramService programService;
 
-    @Autowired
-    TerrainObjectService terrainObjectService;
-
     private final Workbench wb = Workbench.getWorkbench();
 
-    private boolean createTerrainFile(TerrainObject terrainObject, String dir) {
-        String path = String.format(dir + File.separator + "/%s.ter", terrainObject.getTerrainName());
+    public boolean createTerrainFile(TerrainObject terrainObject, String terrainPath) {
         Terrain terrain = wb.createHamsterTerrain(terrainObject.getCustomFields(), terrainObject.getHeight(), terrainObject.getWidth(), terrainObject.getDefaultHamster());
-        return wb.createTerrainFile(terrain, path);
+        return wb.createTerrainFile(terrain, terrainPath);
     }
 
+    public boolean createHamFile(String hamsterPath) {
+        File f = new File(hamsterPath);
+        return DirectoryManagement.createFile(f);
+//
+//        FileWriter fileWriter = null;
+//        try {
+//            fileWriter = new FileWriter(f.getAbsoluteFile());
+//            PrintWriter printWriter = new PrintWriter(fileWriter);
+//            printWriter.print(program.getSourceCode());
+//            printWriter.close();
+//            return true;
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+    }
 
-    public ProgramRunFilePaths getCompiledRunFilePaths(long programId, long terrainId, User user) {
-        String compDir = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "RunDir" + File.separator + user.getId() + File.separator + "CompDir";
+    public boolean precompileHamFile(Program program, String programPath) {
+        Precompiler precompiler = new Precompiler();
+        HamsterFile hamsterFile = new HamsterFile(program.getSourceCode(), program.getProgramType(), programPath);
+        try {
+            return precompiler.precompile(hamsterFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getTerrainFilePath(User user, TerrainObject terrainObject) {
         String terrainDir = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "RunDir" + File.separator + user.getId() + File.separator + "TerrainDir";
+        DirectoryManagement.createDirs(terrainDir);
+        if (!DirectoryManagement.createDirs(terrainDir)) return null;
+        return String.format(terrainDir + File.separator + "%s.ter", terrainObject.getTerrainName());
+    }
+
+    public String getHamsterProgramFilePath(User user, Program program) {
+        String hamsterDir = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "RunDir" + File.separator + user.getId() + File.separator + "HamsterFiles";
+        if (!DirectoryManagement.createDirs(hamsterDir)) return null;
+        return String.format(hamsterDir + File.separator + "%s.ham", program.getProgramName());
+    }
+
+    public ProgramRunFilePaths getCompiledRunFilePaths(long programId, User user) {
+        String compDir = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "RunDir" + File.separator + user.getId() + File.separator + "CompDir";
 
         if (!DirectoryManagement.createDirs(compDir)) return null;
-        if (!DirectoryManagement.createDirs(terrainDir)) return null;
 
-
-        TerrainObject terrainObject = terrainObjectService.getTerrainObject(terrainId);
-        String terrainFilePath = String.format(terrainDir + File.separator + "%s.ter", terrainObject.getTerrainName());
-        if (!createTerrainFile(terrainObject, terrainDir)) return null;
 
         Program program = programService.getProgram(programId);
         String mainMethodContainingCompiledPath = String.format(compDir + File.separator + "%s.class", program.getProgramName());
@@ -54,7 +82,7 @@ public class RunService {
         Precompiler precompiler = new Precompiler();
 
         for (Program p : programsToCompile) {
-            HamsterFile hamsterFile = new HamsterFile(p.getSourceCode(), p.getProgramType());
+            HamsterFile hamsterFile = new HamsterFile(p.getSourceCode(), p.getProgramType(), "");
             try {
                 precompiler.precompile(hamsterFile);
             } catch (IOException e) {
@@ -66,6 +94,6 @@ public class RunService {
             Compiler.compile(compDir, compDir, sourceCodeFilePath);
         }
 
-        return new ProgramRunFilePaths(terrainFilePath, mainMethodContainingCompiledPath);
+        return new ProgramRunFilePaths("", mainMethodContainingCompiledPath);
     }
 }

@@ -23,9 +23,6 @@ public class TerrainObjectController {
     TerrainObjectService terrainObjectService;
 
     @Autowired
-    FieldService fieldService;
-
-    @Autowired
     UserService userService;
 
     @PreAuthorize("hasAuthority('USER')")
