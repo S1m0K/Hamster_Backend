@@ -1,6 +1,7 @@
 package at.ac.htlinn.hamsterbackend.run;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class DirectoryManagement {
@@ -27,7 +28,14 @@ public class DirectoryManagement {
         return f.renameTo(movedFile);
     }
 
-    public static boolean createFile(File f){
-        return false;
+    public static boolean createFile(File f) {
+        if (!f.exists()) {
+            try {
+                return f.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return true;
     }
 }

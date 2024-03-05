@@ -12,32 +12,12 @@ import java.util.Set;
 
 @Service
 public class ProgramService {
-
     @Autowired
     ProgramRepository programRepository;
 
     @Autowired
     UserService userService;
-    //TODO: check if really necessary
-//    
-//    public void compareAndUpdateDatabase(Program program) {
-//        program.setHashValue(program.hashCode());
-//        Set<Program> userPrograms = programRepository.findAllByUserId(program.getUserId());
-//
-//        if (!userPrograms.isEmpty()) {
-//            userPrograms.forEach(t -> {
-//                if (t.getHashValue() == program.getHashValue()) {
-//                    t = program;
-//                    programRepository.save(t);
-//                }
-//            });
-//        } else {
-//            programRepository.save(program);
-//        }
-//    }
 
-
-    
     public boolean delete(long programId) {
         Optional<Program> o = programRepository.findById(programId);
         if (o.isPresent()) {
@@ -52,17 +32,14 @@ public class ProgramService {
         return false;
     }
 
-    
     public Set<Program> getProgramBasicData(long id) {
         return programRepository.findAllProgramBasicDataByUserID(id);
     }
 
-    
     public Program getProgram(long id) {
         return programRepository.findProgramByProgramId(id);
     }
 
-    
     public ArrayList<Program> getProgramsByNames(ArrayList<String> names) {
         ArrayList<Program> programs = new ArrayList<>();
         names.forEach(n -> {
@@ -71,7 +48,6 @@ public class ProgramService {
         return programs;
     }
 
-    
     public Set<Program> getAllNeededProgramsToRun(Program mainProgram) {
         Set<String> foundClasses = new HashSet<>();
         Set<Program> programs = new HashSet<>();
@@ -91,12 +67,10 @@ public class ProgramService {
         return programs;
     }
 
-    
     public Program save(Program program) {
         return programRepository.save(program);
     }
 
-    
     public boolean update(Program program) {
         Optional<Program> o = programRepository.findById(program.getProgramId());
         if (o.isPresent()) {
@@ -109,13 +83,10 @@ public class ProgramService {
         return false;
     }
 
-
-    
     public boolean updatePath(Program program) {
         return programRepository.updatePath(program.getProgramId(), program.getProgramPath());
     }
 
-    
     public boolean updateName(Program program) {
         return programRepository.updateName(program.getProgramId(), program.getProgramName());
     }

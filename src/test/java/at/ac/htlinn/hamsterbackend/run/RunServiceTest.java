@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -29,34 +31,10 @@ public class RunServiceTest {
     TerrainObjectService terrainObjectService;
 
     @Test
-    public void getCompiledRunFilePathsTest() {
+    public void createTerrainTest() {
         User user = User.builder()
                 .id(123)
                 .username("user")
-                .build();
-
-        Program program1 = Program.builder()
-                .programId(123)
-                .programName("TestProgram1")
-                .userId(user.getId())
-                .programPath("")
-                .sourceCode("")
-                .build();
-
-        Program program2 = Program.builder()
-                .programId(124)
-                .programName("TestProgram2")
-                .userId(user.getId())
-                .programPath("")
-                .sourceCode("")
-                .build();
-
-        Program program3 = Program.builder()
-                .programId(125)
-                .programName("TestProgram3")
-                .userId(user.getId())
-                .programPath("")
-                .sourceCode("")
                 .build();
 
         HamsterObject defaultHamster = HamsterObject.builder()
@@ -95,19 +73,144 @@ public class RunServiceTest {
                 .customFields(fields)
                 .build();
 
-        Set<Program> programs = new HashSet<>();
-        programs.add(program1);
-        programs.add(program2);
-        programs.add(program3);
+        String terrainPath = "src" +
+                File.separator + "test" +
+                File.separator + "resources" +
+                File.separator + "RunDir" +
+                File.separator + user.getId() +
+                File.separator + "TerrainDir" +
+                File.separator + terrain.getTerrainName() + ".ter";
 
-        when(programService.getProgram(program1.getProgramId())).thenReturn(program1);
-        when(programService.getAllNeededProgramsToRun(program1)).thenReturn(programs);
-        when(terrainObjectService.getTerrainObject(terrain.getTerrainId())).thenReturn(terrain);
+        assertTrue(runService.createTerrainFile(terrain, terrainPath));
+    }
 
-        ProgramRunFilePaths response = runService.getCompiledRunFilePaths(program1.getProgramId(), terrain.getTerrainId(), user);
+    @Test
+    public void getTerrainPathTest() {
+        User user = User.builder()
+                .id(123)
+                .username("user")
+                .build();
 
-        assertEquals("src\\main\\resources\\RunDir\\123\\CompDir\\TestProgram1.class", response.mainMethodContainingPath);
-        assertEquals("src\\main\\resources\\RunDir\\123\\TerrainDir\\TestTerrain.ter", response.terrainPath);
+        HamsterObject defaultHamster = HamsterObject.builder()
+                .hamster_id(123)
+                .yCord(4)
+                .xCord(4)
+                .cntCornInMouth(10)
+                .viewDirection(ViewDirection.NORTH)
+                .build();
 
+        Field field1 = Field.builder()
+                .field_id(123L)
+                .wall(true)
+                .xCord(1)
+                .yCord(1)
+                .build();
+        Field field2 = Field.builder()
+                .field_id(124L)
+                .cntCorn(5)
+                .xCord(2)
+                .yCord(2)
+                .build();
+
+        List<Field> fields = new ArrayList<>();
+        fields.add(field1);
+        fields.add(field2);
+
+        TerrainObject terrain = TerrainObject.builder()
+                .terrainId(123)
+                .terrainName("TestTerrain")
+                .terrainPath("")
+                .defaultHamster(defaultHamster)
+                .height(12)
+                .width(12)
+                .userId(user.getId())
+                .customFields(fields)
+                .build();
+
+        assertEquals(runService.getTerrainFilePath(user, terrain),
+                "src" +
+                        File.separator + "main" +
+                        File.separator + "resources" +
+                        File.separator + "RunDir" +
+                        File.separator + user.getId() +
+                        File.separator + "TerrainDir" +
+                        File.separator + terrain.getTerrainName() + ".ter"
+        );
+    }
+
+    @Test
+    public void createHamFile() {
+        User user = User.builder()
+                .id(123)
+                .username("user")
+                .build();
+
+        Program program = Program.builder()
+                .programId(123)
+                .programName("TestProgram1")
+                .userId(user.getId())
+                .programPath("")
+                .sourceCode("class A {\n}")
+                .build();
+
+        String programPath = "src" +
+                File.separator + "test" +
+                File.separator + "resources" +
+                File.separator + "RunDir" +
+                File.separator + user.getId() +
+                File.separator + "HamsterFiles" +
+                File.separator + program.getProgramName() + ".ham";
+
+        assertTrue(runService.createHamFile(programPath));
+    }
+
+    @Test
+    public void getHamsterPathTest() {
+        User user = User.builder()
+                .id(123)
+                .username("user")
+                .build();
+
+        Program program = Program.builder()
+                .programId(123)
+                .programName("TestProgram1")
+                .userId(user.getId())
+                .programPath("")
+                .sourceCode("class A {\n}")
+                .build();
+        assertEquals(runService.getHamsterProgramFilePath(user, program),
+                "src" +
+                        File.separator + "main" +
+                        File.separator + "resources" +
+                        File.separator + "RunDir" +
+                        File.separator + user.getId() +
+                        File.separator + "HamsterFiles" +
+                        File.separator + program.getProgramName() + ".ham");
+    }
+
+    @Test
+    public void precompileHamFileTest() {
+        User user = User.builder()
+                .id(123)
+                .username("user")
+                .build();
+
+        Program program = Program.builder()
+                .programId(123)
+                .programName("TestProgram1")
+                .userId(user.getId())
+                .programPath("")
+                .sourceCode("class A {\n}")
+                .build();
+
+        String programPath = "src" +
+                File.separator + "test" +
+                File.separator + "resources" +
+                File.separator + "RunDir" +
+                File.separator + user.getId() +
+                File.separator + "HamsterFiles" +
+                File.separator + program.getProgramName() + ".ham";
+
+        assertTrue(runService.precompileHamFile(program, programPath));
     }
 }

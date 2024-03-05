@@ -35,7 +35,8 @@ public class ProgramController {
     @PostMapping(path = "updatePath")
     public ResponseEntity<?> updatePath(@RequestBody Program program) {
         boolean updateResult = programService.updatePath(program);
-        return updateResult ? ResponseEntity.ok("Path update successful") : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Path update failed");
+        return updateResult ? ResponseEntity.ok("Path update successful") :
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Path update failed");
     }
 
     @PreAuthorize("hasAuthority('USER')")

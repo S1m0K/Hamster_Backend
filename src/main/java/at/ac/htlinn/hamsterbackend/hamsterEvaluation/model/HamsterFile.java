@@ -110,18 +110,19 @@ public class HamsterFile implements Comparable {
      *
      * @param type Der Typ der Datei
      */
-    public HamsterFile(char type) {
+    public HamsterFile(char type, String path) {
         changeSupport = new PropertyChangeSupport(this);
         this.type = type;
-        file = new File(Utils.HOME + Utils.FSEP
-                + "newHamster" + count++);
-        while (file.exists())
-            file = new File(Utils.HOME + Utils.FSEP
-                    + "newHamster" + count++);
+        file = new File(path);
+//        file = new File(Utils.HOME + Utils.FSEP
+//                + "newHamster" + count++);
+//        while (file.exists())
+//            file = new File(Utils.HOME + Utils.FSEP
+//                    + "newHamster" + count++);
     }
 
-    public HamsterFile(String code, char type) {
-        this(type);
+    public HamsterFile(String code, char type, String path) {
+        this(type, path);
         PrintWriter senke = null;
         try {
             senke = new PrintWriter(new FileWriter(file));
