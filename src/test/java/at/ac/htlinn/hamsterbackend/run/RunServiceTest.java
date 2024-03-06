@@ -11,13 +11,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class RunServiceTest {
@@ -127,7 +124,7 @@ public class RunServiceTest {
                 .customFields(fields)
                 .build();
 
-        assertEquals(runService.getTerrainFilePath(user, terrain),
+        assertEquals(runService.buildTerrainFilePath(user, terrain),
                 "src" +
                         File.separator + "main" +
                         File.separator + "resources" +
@@ -139,7 +136,7 @@ public class RunServiceTest {
     }
 
     @Test
-    public void createHamFile() {
+    public void createHamFileOnFileSystemTest() {
         User user = User.builder()
                 .id(123)
                 .username("user")
@@ -161,7 +158,7 @@ public class RunServiceTest {
                 File.separator + "HamsterFiles" +
                 File.separator + program.getProgramName() + ".ham";
 
-        assertTrue(runService.createHamFile(programPath));
+        assertTrue(runService.createHamFileOnFileSystem(programPath));
     }
 
     @Test
@@ -178,7 +175,7 @@ public class RunServiceTest {
                 .programPath("")
                 .sourceCode("class A {\n}")
                 .build();
-        assertEquals(runService.getHamsterProgramFilePath(user, program),
+        assertEquals(runService.buildHamFilePath(user, program),
                 "src" +
                         File.separator + "main" +
                         File.separator + "resources" +
@@ -203,14 +200,17 @@ public class RunServiceTest {
                 .sourceCode("class A {\n}")
                 .build();
 
-        String programPath = "src" +
-                File.separator + "test" +
-                File.separator + "resources" +
-                File.separator + "RunDir" +
-                File.separator + user.getId() +
-                File.separator + "HamsterFiles" +
-                File.separator + program.getProgramName() + ".ham";
+//        String programPath = "src" +
+//                File.separator + "test" +
+//                File.separator + "resources" +
+//                File.separator + "RunDir" +
+//                File.separator + user.getId() +
+//                File.separator + "HamsterFiles" +
+//                File.separator + program.getProgramName() + ".ham";
 
-        assertTrue(runService.precompileHamFile(program, programPath));
+        String programPath = runService.buildHamFilePath(user, program);
+        runService.createHamFileOnFileSystem(programPath);
+        assertTrue(runService.precompileHamFile(runService.getHamsterFileObject(program, programPath)));
+
     }
 }
