@@ -114,6 +114,6 @@ public class Program implements Comparable {
         if (this.sourceCode.contains("class")) {
             return 'o';
         }
-        return 'c';
+        return 'i';
     }
 }

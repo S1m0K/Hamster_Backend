@@ -197,16 +197,38 @@ public class RunServiceTest {
                 .programName("TestProgram1")
                 .userId(user.getId())
                 .programPath("")
-                .sourceCode("class A {\n}")
+                .sourceCode("class SammelHamster extends Hamster {\n" +
+                        "    SammelHamster(int r, int s, int b, int k) {\n" +
+                        "        super(r, s, b, k);\n" +
+                        "    }\n" +
+                        "\n" +
+                        "\n" +
+                        "    void sammle() {\n" +
+                        "        while (this.kornDa()) {\n" +
+                        "            this.nimm();\n" +
+                        "        }\n" +
+                        "    }\n" +
+                        "    \n" +
+                        "    void laufeZurMauerUndSammle() {\n" +
+                        "        this.sammle();\n" +
+                        "        while (this.vornFrei()) {\n" +
+                        "            this.vor();\n" +
+                        "            this.sammle();\n" +
+                        "        }\n" +
+                        "    }\n" +
+                        "}\n" +
+                        "\n" +
+                        "void main() {\n" +
+                        "    Hamster willi = Hamster.getStandardHamster();\n" +
+                        "    while (willi.vornFrei()) {\n" +
+                        "        willi.vor();\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    SammelHamster paul = new SammelHamster(1, 0,\n" +
+                        "            Hamster.OST, 0);\n" +
+                        "    paul.laufeZurMauerUndSammle();\n" +
+                        "}\n")
                 .build();
-
-//        String programPath = "src" +
-//                File.separator + "test" +
-//                File.separator + "resources" +
-//                File.separator + "RunDir" +
-//                File.separator + user.getId() +
-//                File.separator + "HamsterFiles" +
-//                File.separator + program.getProgramName() + ".ham";
 
         String programPath = runService.buildHamFilePath(user, program);
         runService.createHamFileOnFileSystem(programPath);

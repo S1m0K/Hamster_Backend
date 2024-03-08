@@ -114,11 +114,6 @@ public class HamsterFile implements Comparable {
         changeSupport = new PropertyChangeSupport(this);
         this.type = type;
         file = new File(path);
-//        file = new File(Utils.HOME + Utils.FSEP
-//                + "newHamster" + count++);
-//        while (file.exists())
-//            file = new File(Utils.HOME + Utils.FSEP
-//                    + "newHamster" + count++);
     }
 
     public HamsterFile(String code, char type, String path) {
@@ -446,6 +441,7 @@ public class HamsterFile implements Comparable {
         if (isTerrain()) { // dibo 260110
             type = TERRITORIUM;
         } else if (isProgram()) {
+            //TODO: check why type changes to i!
             type = IMPERATIVE;
             int pos = s.indexOf("*/");
             if (pos > 0 && pos + 2 < s.length()) {
