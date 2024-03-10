@@ -37,9 +37,6 @@ public class Program implements Comparable {
     @Column(name = "PROGRAM_PATH")
     private String programPath;
 
-    @Column(name = "ARR_ID")
-    private long arrId;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -111,9 +108,23 @@ public class Program implements Comparable {
     }
 
     public char getProgramType() {
-        if (this.sourceCode.contains("class")) {
+        if (this.sourceCode.contains("main()") && this.sourceCode.contains("class ")) {
             return 'o';
+        } else if (this.sourceCode.contains("main()")) {
+            return 'i';
+        } else if (this.sourceCode.contains("class ")) {
+            return 'c';
         }
-        return 'i';
+        return 'u';//unaccepted
+    }
+
+    public void setProgramTypeAsCommentInSourceCode() {
+        if (this.sourceCode.contains("main()") && this.sourceCode.contains("class ")) {
+            this.sourceCode = "/*object-oriented program*/" + this.sourceCode;
+        } else if (this.sourceCode.contains("main()")) {
+            this.sourceCode = "/*imperative program*/" + this.sourceCode;
+        } else if (this.sourceCode.contains("class ")) {
+            this.sourceCode = "/*class*/" + this.sourceCode;
+        }
     }
 }

@@ -41,6 +41,7 @@ public class RunService {
     }
 
     public HamsterFile getHamsterFileObject(Program program, String programPath) {
+        program.setProgramTypeAsCommentInSourceCode();
         return new HamsterFile(program.getSourceCode(), program.getProgramType(), programPath);
     }
 
