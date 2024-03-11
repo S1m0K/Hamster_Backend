@@ -77,9 +77,6 @@ public class ActivityService {
 		Map<String, String> subclassMap = activityDto instanceof ExerciseDto ?
 				getFieldNameMap(ExerciseDto.class) : getFieldNameMap(ContestDto.class);
 		
-		System.out.println(activityMap);
-		System.out.println(subclassMap);
-		
 		for (Map.Entry<String, Object> set : fields.entrySet()) {
 			String key = set.getKey();
 			Field field;
@@ -99,6 +96,7 @@ public class ActivityService {
 			// attempt to update field
 			try {
 		    	field.setAccessible(true);
+		    	// TODO: updating Date fields does not work since Strings cannot be automatically casted to Dates
 		    	field.set(activityDto, set.getValue());
 			}
 			catch (Exception e) {
