@@ -1,82 +1,27 @@
-# Backend Spring
+# Hamster Backend
 
 This is the API Background where our frontend framework (= VueJS) sends request to.
 
 ## Installation guide for developer (not using docker) to edit program
 
-- git clone https://github.com/xJHamster/BackendSpring
-- open maven spring project in your IDE 
-- create mysql database called "springserver"
+- git clone https://github.com/S1m0K/Hamster_Backend
+- open maven spring project in your IDE
 - run ProjectWebsiteApplication 
 
 You can apply some changes in settings.properties, but be careful! You might need to reinstall your database!
 
-## The commands 
+## Credentials
 
-- vor(); 
-- linksUm(); 
-- nimm(); 
-- gib(); 
-- vornFrei(); 
-- kornDa(); 
-- maulLeer();
-
-## Rest Services
-
-Standard user to log in with admin rights:  
+Standard credentials to log in with admin permissions:  
 username: admin  
 password: admin  
 
 Should be changed when publishing it!
 
-### Objects 
+## Rest Services
 
-1. <ins>user:</ins>  
-{  
-  &ensp;username: (String),  
-  &ensp;password: (String),  
-  &ensp;email: (String)  
-}  
-3. <ins>hamster:</ins>  
-{  
-  &ensp;programName: (String),  
-  &ensp;program: (String),  
-  &ensp;terrainName: (String),   
-  &ensp;laenge: (int),  
-  &ensp;breite: (int),  
-  &ensp;x: (int),  
-  &ensp;y: (int),  
-  &ensp;cornAnzahl: (int[])  
-  &ensp;corn: (int[][])
-  &ensp;wall: (int[][])  
-}  
-
-### Services 
-  
-All Services starts with /api!
-
-1. /user services - available from DEV
-This are all Services which involves user data beginning with /user (services in brackets are coming soon!)
-- /users (GET, POST, PUT, DELETE)
-- /logout (GET)
-- /roles (POST, DELETE)
-2. /hamster services - for all registered user available: 
-All services which handles requests containing hamstercode beginning with /hamster
-- /defaultTerrain (POST)
-- /existingTerrain (POST)
-- /newTerrain (POST)  
-3. Teacher services - available from TEACHER
-Services which are available for teachers to take control over their students begin with /teacher
-- /students (GET)
-- /course (GET, POST, DELETE)
-- /course/students (GET, POST, DELETE)
-- /course/teachers (GET)
-- /exercises (GET, DELETE, POST, PUT)
-- (/rateExercises)
-3. /login com.example.hamster_backend.service  
-The login com.example.hamster_backend.service; request sent as json => {"username": "username", "password": "password"}
-4. /register com.example.hamster_backend.service  
-The register com.example.hamster_backend.service; request sent as json => {"username": "username", "password": "password", "email": "email"}  
+All API-endpoints for the course system are documented in the file `api-guide.html`.
 
 ### Test
-To check if you installed everything correctly, I provided you with JUnit tests, which you can find in src/test/java/io/github/Hattinger04/
+
+The course system functionality can be tested via the unit tests at `src/test/java/at.ac.htlinn.hamsterbackend.courseManagement`
